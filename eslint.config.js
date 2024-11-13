@@ -5,6 +5,7 @@ import unusedImportPlugin from "eslint-plugin-unused-imports";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import reactRefreshPlugin from "eslint-plugin-react-refresh";
 import eslintSimpleImport from "eslint-plugin-simple-import-sort";
+import unicornPlugin from "eslint-plugin-unicorn";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -17,6 +18,7 @@ export default tseslint.config(
 			["import"]: importPlugin,
 			["unused-imports"]: unusedImportPlugin,
 			["simple-import-sort"]: eslintSimpleImport,
+			["unicorn"]: unicornPlugin,
 		},
 	},
 	{
@@ -38,6 +40,21 @@ export default tseslint.config(
 			"unused-imports/no-unused-imports": "error",
 
 			"@typescript-eslint/no-unused-vars": "off",
+
+			"unicorn/filename-case": [
+				"error",
+				{
+					cases: {
+						kebabCase: true,
+					},
+				},
+			],
+		},
+	},
+	{
+		files: ["src/shared/ui/*.{ts,tsx}"],
+		rules: {
+			"react-refresh/only-export-components": "off",
 		},
 	},
 );
