@@ -1,35 +1,35 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
-import {Data} from "../Api/data.ts";
-import {useWebSocket} from "../web-socket-provide.tsx";
+import { Data } from "../Api/data.ts";
+import { useWebSocket } from "../web-socket-provide.tsx";
 
 export const useGameServer = () => {
-    const [recvData, setRecvData] = useState<Data | null>(null);
-    const [sendData, setSendData] = useState<Data | null>(null);
-    const webSocket = useWebSocket();
-    
-    const MessageEventHandler = (event: MessageEvent) => {
-        const message = Data.deserialize(new Uint8Array(event.data));
-        setRecvData(message);
-    }
+	const [recvData, setRecvData] = useState<Data | null>(null);
+	const [sendData, setSendData] = useState<Data | null>(null);
+	const webSocket = useWebSocket();
 
-    const SendData = (data: Data) => {
-        webSocket?.ws?.send(data.serializeBinary());
-    }
+	const MessageEventHandler = (event: MessageEvent) => {
+		const message = Data.deserialize(new Uint8Array(event.data));
+		setRecvData(message);
+	};
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            if (sendData) {
-                webSocket?.ws?.send(sendData.serializeBinary());
-            }
-        }, 16.7);
+	const SendData = (data: Data) => {
+		webSocket?.ws?.send(data.serializeBinary());
+	};
 
-        webSocket?.ws?.addEventListener("message", MessageEventHandler);
+	useEffect(() => {
+		const timer = setInterval(() => {
+			if (sendData) {
+				webSocket?.ws?.send(sendData.serializeBinary());
+			}
+		}, 16.7);
 
-        return () => {
-            clearInterval(timer);
-            webSocket?.ws?.removeEventListener("message", MessageEventHandler);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [recvData,sendData, webSocket?.ws, {setSendData, SendData}]);
-}
+		webSocket?.ws?.addEventListener("message", MessageEventHandler);
+
+		return () => {
+			clearInterval(timer);
+			webSocket?.ws?.removeEventListener("message", MessageEventHandler);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [recvData, sendData, webSocket?.ws, { setSendData, SendData }]);
+};
