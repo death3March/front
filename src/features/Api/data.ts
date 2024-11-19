@@ -4,9 +4,10 @@
  * source: src/features/Api/data.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as pb_1 from "google-protobuf";
+
 export class Data extends pb_1.Message {
     #one_of_decls: number[][] = [[1, 2, 3, 4, 5]];
-    constructor(data?: any[] | ({
+    constructor(data?: never[] | ({
         userID?: string;
     } & (({
         roomName?: string;
@@ -241,7 +242,7 @@ export class Data extends pb_1.Message {
 }
 export class Point extends pb_1.Message {
     #one_of_decls: number[][] = [];
-    constructor(data?: any[] | {
+    constructor(data?: never[] | {
         x?: number;
         y?: number;
     }) {
