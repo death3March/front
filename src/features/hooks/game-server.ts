@@ -32,4 +32,6 @@ export const useGameServer = () => {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [recvData, sendData, webSocket?.ws, { setSendData, SendData }]);
+
+	return [recvData, sendData, { setSendData, SendData }]
 };
