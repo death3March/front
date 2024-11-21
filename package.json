@@ -14,19 +14,22 @@
 	},
 	"dependencies": {
 		"@radix-ui/react-slot": "^1.1.0",
+		"@tanstack/react-query": "^5.61.0",
+		"@tanstack/react-router": "^1.82.1",
 		"@types/google-protobuf": "^3.15.12",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"lucide-react": "^0.456.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
-		"react-router-dom": "^6.28.0",
 		"tailwind-merge": "^2.5.4",
 		"tailwindcss-animate": "^1.0.7"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@eslint/js": "^9.13.0",
+		"@tanstack/router-devtools": "^1.82.1",
+		"@tanstack/router-plugin": "^1.81.9",
 		"@types/react": "^18.3.12",
 		"@types/react-dom": "^18.3.1",
 		"@vitejs/plugin-react-swc": "^3.5.0",
