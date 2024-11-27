@@ -17,7 +17,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
 	useEffect(() => {
 		const connectWebSocket = () => {
-			ws.current = new WebSocket("ws://127.0.0.1:8080");
+			ws.current ??= new WebSocket("ws://localhost:8080");
 
 			ws.current.onopen = () => {
 				console.log("WebSocket connection opened");
@@ -39,13 +39,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 		};
 
 		connectWebSocket();
-
-		return () => {
-			if (ws.current) {
-				ws.current.close();
-				ws.current.onmessage = null;
-			}
-		};
 	}, []);
 
 	return <WebSocketContext.Provider value={{ ws: ws.current, message }}>{children}</WebSocketContext.Provider>;
