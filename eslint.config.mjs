@@ -7,6 +7,7 @@ import reactRefreshPlugin from "eslint-plugin-react-refresh";
 import eslintSimpleImport from "eslint-plugin-simple-import-sort";
 import unicornPlugin from "eslint-plugin-unicorn";
 import tseslint from "typescript-eslint";
+import tailwindcssPlugin from "eslint-plugin-tailwindcss";
 
 export default tseslint.config(
 	{ ignores: ["dist"] },
@@ -19,10 +20,11 @@ export default tseslint.config(
 			["unused-imports"]: unusedImportPlugin,
 			["simple-import-sort"]: eslintSimpleImport,
 			["unicorn"]: unicornPlugin,
+			["tailwindcss"]: tailwindcssPlugin,
 		},
 	},
 	{
-		extends: [js.configs.recommended, ...tseslint.configs.recommended],
+		extends: [js.configs.recommended, ...tseslint.configs.recommended, ...tailwindcssPlugin.configs["flat/recommended"]],
 		files: ["**/*.{ts,tsx}"],
 		languageOptions: {
 			ecmaVersion: 2020,
