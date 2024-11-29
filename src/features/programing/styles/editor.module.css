@@ -1,0 +1,5 @@
+.background {
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.05) 1px, rgba(255, 255, 255, 1) 1px);
+    background-size: 10px 10px;
+  }
+  
