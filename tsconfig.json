@@ -1,5 +1,15 @@
 {
   "files": [],
+  // https://ui.shadcn.com/docs/components-json
+  // Important: If you're using the src directory, make sure it is included under paths in your tsconfig.json or jsconfig.json file.
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
   "references": [
     {
       "path": "./tsconfig.app.json"
