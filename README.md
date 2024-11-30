@@ -14,9 +14,6 @@
       - components/
         - componentA.tsx
       - types/
-  - route
-    - (path)
-      - route.tsx // layoutのみ。ここでロジックの定義はしない
   - shared
     - components/
       - sharedComp.tsx
@@ -24,6 +21,7 @@
       - sampleHook.tsx
     - utils/
     - types/
+  - route.tsx // routeの定義
 ```
 
 ## branchルール

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { Data } from "../Api/data.ts";
-import { useWebSocket } from "../web-socket-provide.tsx";
+import { Data } from "../api/data";
+import { useWebSocket } from "../web-socket-provider";
 
 export const useGameServer = () => {
 	const [recvData, setRecvData] = useState<Data | null>(null);
