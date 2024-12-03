@@ -2,6 +2,7 @@ import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/re
 
 import { Game } from "./pages/game";
 import { Home } from "./pages/home";
+import { Game } from "./pages/game";
 
 const rootRoute = createRootRoute({
 	component: () => <Outlet />,
