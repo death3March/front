@@ -24,7 +24,11 @@ export default tseslint.config(
 		},
 	},
 	{
-		extends: [js.configs.recommended, ...tseslint.configs.recommended, ...tailwindcssPlugin.configs["flat/recommended"]],
+		extends: [
+			js.configs.recommended,
+			...tseslint.configs.recommended,
+			...tailwindcssPlugin.configs["flat/recommended"],
+		],
 		files: ["**/*.{ts,tsx}"],
 		languageOptions: {
 			ecmaVersion: 2020,
