@@ -18,14 +18,12 @@ interface MapProps {
 	playerPosition: number;
 }
 
-export const Map = ({
-	playerPosition,
-}: MapProps ) => {
+export const Map = ({ playerPosition }: MapProps) => {
 	const orderedCells = useMemo(() => mockMap.sequence.map((id) => mockMap.cells[id - 1]), []);
 	return (
 		<div className="flex flex-col gap-4">
-			{orderedCells.map((cell,index) => (
-				 <div
+			{orderedCells.map((cell, index) => (
+				<div
 					key={cell.id}
 					className={`group relative grid h-[100px] w-full place-items-center rounded-md border border-gray-300 bg-white p-1 
 					${index === playerPosition ? "bg-yellow-100" : ""}`}
