@@ -11,5 +11,5 @@ export interface JoinSuccessMessage {
   }
   
   // 受信する可能性のある全てのメッセージタイプをユニオン型でまとめる
-  export type MessageData = JoinSuccessMessage | ErrorMessage;
+  export type InboundMessage = JoinSuccessMessage | ErrorMessage;
   

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { MessageData } from "./types/message-data";
+import { InboundMessage } from "./types/inbound-message";
 import { OutboundMessage } from "./types/outbound-message";
 import { useWebSocketMessageHandler } from "./use-websocket-message-handler";
 import { WebSocketContext } from "./websocket-context";
@@ -33,7 +33,7 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     };
 
     ws.onmessage = (e) => {
-      const data: MessageData = JSON.parse(e.data);
+      const data: InboundMessage = JSON.parse(e.data);
       handleMessage(data);
     };
 
