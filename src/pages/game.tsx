@@ -1,10 +1,10 @@
-
+import { GameBoard } from "@/features/game/game-board";
 import { Container } from "@/shared/components/container";
 
-export const Home = () => {
+export const Game = () => {
 	return (
 		<Container>
-			Home
+			<GameBoard />
 		</Container>
 	);
 };
