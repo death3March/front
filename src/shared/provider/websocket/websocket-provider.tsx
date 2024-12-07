@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback,useEffect, useRef, useState } from "react";
 
 import { InboundMessage } from "./types/inbound-message";
 import { OutboundMessage } from "./types/outbound-message";
@@ -16,7 +16,17 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
 
   const handleMessage = useWebSocketMessageHandler();
 
-  const connectWebSocket = () => {
+  const disconnectWebSocket = useCallback(() => {
+    if (wsRef.current) {
+      console.log("Disconnecting WebSocket...");
+      wsRef.current.close();
+      wsRef.current = null;
+      setIsConnected(false);
+      console.log("WebSocket disconnected");
+    }
+  }, []);
+
+  const connectWebSocket = useCallback(() => {
     if (isConnected || wsRef.current) {
       disconnectWebSocket();
     }
@@ -45,25 +55,15 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     };
 
     wsRef.current = ws;
-  };
+  }, [baseWsUrl, isConnected, disconnectWebSocket, handleMessage]);
 
-  const disconnectWebSocket = () => {
-    if (wsRef.current) {
-      console.log("Disconnecting WebSocket...");
-      wsRef.current.close();
-      wsRef.current = null;
-      setIsConnected(false);
-      console.log("WebSocket disconnected");
-    }
-  };
-
-  const sendMessage = (data: OutboundMessage) => {
+  const sendMessage = useCallback((data: OutboundMessage) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify(data));
     } else {
       console.warn("WebSocket is not open. Cannot send message.");
     }
-  };
+  }, []);
 
   useEffect(() => {
     connectWebSocket();
@@ -71,8 +71,7 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     return () => {
       disconnectWebSocket();
     };
-  }, []);
-
+  }, [connectWebSocket, disconnectWebSocket]);
 
   return (
     <WebSocketContext.Provider
