@@ -16,17 +16,14 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
 
   const handleMessage = useWebSocketMessageHandler();
 
-  const connectWebSocket = (
-    room: string,
-  ) => {
+  const connectWebSocket = () => {
     if (isConnected || wsRef.current) {
       disconnectWebSocket();
     }
 
-    const fullUrl = `${baseWsUrl}/${room}`;
-    console.log("Connecting WebSocket...", fullUrl);
+    console.log("Connecting WebSocket...", baseWsUrl);
 
-    const ws = new WebSocket(fullUrl);
+    const ws = new WebSocket(baseWsUrl);
     ws.onopen = () => {
       console.log("WebSocket connection established");
       setIsConnected(true);
@@ -48,7 +45,6 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     };
 
     wsRef.current = ws;
-    console.log("WebSocket connected");
   };
 
   const disconnectWebSocket = () => {
@@ -70,10 +66,13 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
   };
 
   useEffect(() => {
+    connectWebSocket();
+
     return () => {
       disconnectWebSocket();
     };
   }, []);
+
 
   return (
     <WebSocketContext.Provider

@@ -4,7 +4,7 @@ import { OutboundMessage } from "./types/outbound-message";
 
 interface WebSocketContextValue {
   isConnected: boolean;
-  connectWebSocket: (room: string) => void;
+  connectWebSocket: () => void;
   disconnectWebSocket: () => void;
   sendMessage: (data: OutboundMessage) => void;
 }
