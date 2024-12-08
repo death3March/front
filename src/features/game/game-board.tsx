@@ -1,9 +1,7 @@
-import { useParams } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Map } from "@/features/game/components/map";
 import { Slot } from "@/features/game/components/slot";
-import { gameRoute } from "@/router";
 import { DialogWrapper } from "@/shared/components/dialog-wrapper";
 import { ClientMessage, RoomJoinRequest } from "@/shared/provider/websocket/pb/client-message";
 import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
@@ -12,8 +10,7 @@ import { Quiz } from "./components/quiz";
 import { QuizModel } from "./types/quiz";
 
 export const GameBoard = () => {
-	const { roomCode } = useParams({ from: gameRoute.id });
-	const { isConnected, sendMessage } = useWebSocket();
+	const { sendMessage } = useWebSocket();
 
 	const [playerPosition, setPlayerPosition] = useState(0);
 	const [showSlotModal, setShowSlotModal] = useState(false);
@@ -36,29 +33,22 @@ export const GameBoard = () => {
 			questions: "パリの首都はどこ？",
 			options: ["パリ", "ロンドン", "東京"],
 		});
+		const joinRequestData = new RoomJoinRequest.Data();
+		  joinRequestData.playerId = 25212;
+		  joinRequestData.roomCode = "121515";
+	  
+		  const joinRequest = new RoomJoinRequest();
+		  joinRequest.data = joinRequestData;
+	  
+		  const message = new ClientMessage();
+		  message.roomJoinRequest = joinRequest;
+	  
+		  sendMessage(message);
 		setShowQuizModal(true);
-	};
-
-	useEffect(() => {
-		if (isConnected) {
-			const joingRequest = new RoomJoinRequest.Data();
-			joingRequest.playerId = 1;
-			joingRequest.roomCode = roomCode;
-
-			const joinRequest = new RoomJoinRequest();
-			joinRequest.data = joingRequest;
-
-			const message = new ClientMessage();
-			message.roomJoinRequest = joinRequest;
-
-			sendMessage(message);
-		}
-	}, [isConnected, roomCode, sendMessage]);
+	};	  
 
 	return (
 		<div>
-			<h1 className="text-2xl font-bold">Game : {roomCode}</h1>
-
 			<Map playerPosition={playerPosition} />
 
 			<div className="mt-8 flex flex-col items-center">

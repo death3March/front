@@ -4,7 +4,7 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 
 interface JoinRoomFormProps {
-	onSubmit: (roomName: string) => void;
+	onSubmit: (roomCode: string) => void;
 }
 
 export const JoinRoomForm = ({ onSubmit }: JoinRoomFormProps) => {
@@ -12,9 +12,9 @@ export const JoinRoomForm = ({ onSubmit }: JoinRoomFormProps) => {
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		const roomName = inputRef.current?.value.trim();
-		if (roomName) {
-			onSubmit(roomName);
+		const roomCode = inputRef.current?.value.trim();
+		if (roomCode) {
+			onSubmit(roomCode);
 		}
 	};
 
