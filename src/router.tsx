@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router";
 
+import { Game } from "./pages/game";
 import { Home } from "./pages/home";
 
 const rootRoute = createRootRoute({
@@ -12,4 +13,10 @@ const homeRoute = createRoute({
 	component: () => <Home />,
 });
 
-export const router = createRouter({ routeTree: rootRoute.addChildren([homeRoute]) });
+export const gameRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/game/$roomCode",
+	component: () => <Game />,
+});
+
+export const router = createRouter({ routeTree: rootRoute.addChildren([homeRoute, gameRoute]) });
