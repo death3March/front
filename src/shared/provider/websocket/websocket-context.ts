@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { ClientMessage } from "./types/client-message";
+import { ClientMessage } from "./pb/client-message";
 
 interface WebSocketContextValue {
   isConnected: boolean;

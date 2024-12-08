@@ -1,7 +1,7 @@
 import React, { useCallback,useEffect, useRef, useState } from "react";
 
-import { ClientMessage } from "./types/client-message";
-import { ServerMessage } from "./types/server-message";
+import { ClientMessage } from "./pb/client-message";
+import { ServerMessage } from "./pb/server-message";
 import { useServerMessageHandler } from "./use-server-message-handler";
 import { WebSocketContext } from "./websocket-context";
 

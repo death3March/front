@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { ServerMessage } from "./types/server-message";
+import { ServerMessage } from "./pb/server-message";
 
 export const useServerMessageHandler = () => {
     return useCallback((data: ServerMessage) => {

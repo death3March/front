@@ -7,7 +7,7 @@ import { gameRoute } from "@/router";
 import { Quiz } from "./components/quiz";
 import { QuizModel } from "./types/quiz";
 import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
-import { RoomJoinRequest, ClientMessage } from "@/shared/provider/websocket/types/client-message";
+import { RoomJoinRequest, ClientMessage } from "@/shared/provider/websocket/pb/client-message";
 
 export const GameBoard = () => {
 	const { roomCode } = useParams({ from: gameRoute.id });
