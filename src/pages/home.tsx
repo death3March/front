@@ -7,10 +7,10 @@ import { gameRoute } from "@/router";
 export const Home: React.FC = () => {
 	const navigate = useNavigate();
 
-	const handleRoomJoined = (roomName: string) => {
+	const handleRoomJoined = (roomCode: string) => {
 		navigate({
 			to: gameRoute.id,
-			params: { roomName: roomName },
+			params: { roomCode: roomCode },
 		});
 	};
 

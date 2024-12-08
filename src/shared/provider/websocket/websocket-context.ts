@@ -3,15 +3,13 @@ import { createContext } from "react";
 import { ClientMessage } from "./pb/client-message";
 
 interface WebSocketContextValue {
-	isConnected: boolean;
-	connectWebSocket: () => void;
+	ws: WebSocket | null;
 	disconnectWebSocket: () => void;
 	sendMessage: (data: ClientMessage) => void;
 }
 
 export const WebSocketContext = createContext<WebSocketContextValue>({
-	isConnected: false,
-	connectWebSocket: () => {},
+	ws: null,
 	disconnectWebSocket: () => {},
 	sendMessage: () => {},
 });
