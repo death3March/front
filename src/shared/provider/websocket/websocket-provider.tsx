@@ -1,8 +1,8 @@
 import React, { useCallback,useEffect, useRef, useState } from "react";
 
-import { InboundMessage } from "./types/inbound-message";
-import { OutboundMessage } from "./types/outbound-message";
-import { useWebSocketMessageHandler } from "./use-websocket-message-handler";
+import { ClientMessage } from "./types/client-message";
+import { ServerMessage } from "./types/server-message";
+import { useServerMessageHandler } from "./use-server-message-handler";
 import { WebSocketContext } from "./websocket-context";
 
 interface WebSocketProviderProps {
@@ -10,11 +10,11 @@ interface WebSocketProviderProps {
 }
 
 export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
-  const baseWsUrl = "ws://localhost:8080";
+  const baseWsUrl = "ws://127.0.0.1:8080";
   const wsRef = useRef<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  const handleMessage = useWebSocketMessageHandler();
+  const handleMessage = useServerMessageHandler();
 
   const disconnectWebSocket = useCallback(() => {
     if (wsRef.current) {
@@ -40,7 +40,7 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     };
 
     ws.onmessage = (e) => {
-      const data: InboundMessage = JSON.parse(e.data);
+      const data: ServerMessage = e.data;
       handleMessage(data);
     };
 
@@ -57,9 +57,9 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     wsRef.current = ws;
   }, [baseWsUrl, isConnected, disconnectWebSocket, handleMessage]);
 
-  const sendMessage = useCallback((data: OutboundMessage) => {
+  const sendMessage = useCallback((data: ClientMessage) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify(data));
+      wsRef.current.send(data.serializeBinary());
     } else {
       console.warn("WebSocket is not open. Cannot send message.");
     }

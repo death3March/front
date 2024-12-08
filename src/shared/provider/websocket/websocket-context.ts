@@ -1,12 +1,12 @@
 import { createContext } from "react";
 
-import { OutboundMessage } from "./types/outbound-message";
+import { ClientMessage } from "./types/client-message";
 
 interface WebSocketContextValue {
   isConnected: boolean;
   connectWebSocket: () => void;
   disconnectWebSocket: () => void;
-  sendMessage: (data: OutboundMessage) => void;
+  sendMessage: (data: ClientMessage) => void;
 }
 
 export const WebSocketContext = createContext<WebSocketContextValue>({

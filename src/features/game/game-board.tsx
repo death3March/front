@@ -1,13 +1,18 @@
-import { useState } from "react";
-
+import { useState, useEffect  } from "react";
+import { useParams } from '@tanstack/react-router';
 import { Map } from "@/features/game/components/map";
 import { Slot } from "@/features/game/components/slot";
 import { DialogWrapper } from "@/shared/components/dialog-wrapper";
-
+import { gameRoute } from "@/router";
 import { Quiz } from "./components/quiz";
 import { QuizModel } from "./types/quiz";
+import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
+import { RoomJoinRequest, ClientMessage } from "@/shared/provider/websocket/types/client-message";
 
 export const GameBoard = () => {
+	const { roomCode } = useParams({ from: gameRoute.id });
+	const { isConnected, sendMessage } = useWebSocket();
+
 	const [playerPosition, setPlayerPosition] = useState(0);
 	const [showSlotModal, setShowSlotModal] = useState(false);
 	const [showQuizModal, setShowQuizModal] = useState(false);
@@ -32,8 +37,26 @@ export const GameBoard = () => {
 		setShowQuizModal(true);
 	};
 
+	useEffect(() => {
+		if (isConnected) {
+			const joingRequest = new RoomJoinRequest.Data();
+			joingRequest.playerId = 1;
+			joingRequest.roomCode = roomCode;
+
+			const joinRequest = new RoomJoinRequest();
+			joinRequest.data = joingRequest;
+
+			const message = new ClientMessage();
+			message.roomJoinRequest = joinRequest;
+
+			sendMessage(message);
+		}
+	}, [isConnected]);
+
 	return (
 		<div>
+			<h1 className="text-2xl font-bold">Game : {roomCode}</h1>
+
 			<Map playerPosition={playerPosition} />
 
 			<div className="mt-8 flex flex-col items-center">

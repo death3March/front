@@ -15,7 +15,7 @@ const homeRoute = createRoute({
 
 export const gameRoute = createRoute({
 	getParentRoute: () => rootRoute,
-	path: "/game/$roomName",
+	path: "/game/$roomCode",
 	component: () => <Game />,
 });
 
