@@ -11,11 +11,7 @@ interface WebSocketProviderProps {
 	children: React.ReactNode;
 }
 
-export const WebSocketProvider = ({ 
-	playerId,
-	roomCode,
-	children 
-}: WebSocketProviderProps) => {
+export const WebSocketProvider = ({ playerId, roomCode, children }: WebSocketProviderProps) => {
 	const baseWsUrl = "ws://127.0.0.1:8080";
 	const ws = useRef<WebSocket | null>(null);
 
@@ -49,10 +45,10 @@ export const WebSocketProvider = ({
 			const joinRequestData = new RoomJoinRequest.Data();
 			joinRequestData.playerId = playerId;
 			joinRequestData.roomCode = roomCode;
-		
+
 			const joinRequest = new RoomJoinRequest();
 			joinRequest.data = joinRequestData;
-		
+
 			const message = new ClientMessage();
 			message.roomJoinRequest = joinRequest;
 			sendMessage(message);

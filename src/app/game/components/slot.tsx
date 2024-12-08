@@ -1,8 +1,9 @@
 import clsx from "clsx";
 import { motion } from "motion/react";
 
-import { useSlotAnimation } from "@/features/game/hooks/use-slot-animation";
 import { Button } from "@/shared/ui/button";
+
+import { useSlotAnimation } from "../hooks/use-slot-animation";
 
 interface SlotProps {
 	target: number;

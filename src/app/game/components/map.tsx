@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { MapModel } from "../types/map-cell";
+import { MapModel } from "../types/map";
 
 const mockMap: MapModel = {
 	cells: [

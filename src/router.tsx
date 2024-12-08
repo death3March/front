@@ -1,7 +1,7 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router";
 
-import { Game } from "./pages/game";
-import { Home } from "./pages/home";
+import { Game } from "./app/game/page";
+import { Home } from "./app/home/page";
 
 const rootRoute = createRootRoute({
 	component: () => <Outlet />,
