@@ -3912,7 +3912,7 @@ snapshots:
   delegates@1.0.0: {}
 
   detect-libc@2.0.3: {}
-
+  
   detect-node-es@1.1.0: {}
 
   didyoumean@1.2.2: {}
