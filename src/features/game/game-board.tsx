@@ -3,15 +3,11 @@ import { useState } from "react";
 import { Map } from "@/features/game/components/map";
 import { Slot } from "@/features/game/components/slot";
 import { DialogWrapper } from "@/shared/components/dialog-wrapper";
-import { ClientMessage, RoomJoinRequest } from "@/shared/provider/websocket/pb/client-message";
-import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
 
 import { Quiz } from "./components/quiz";
 import { QuizModel } from "./types/quiz";
 
 export const GameBoard = () => {
-	const { sendMessage } = useWebSocket();
-
 	const [playerPosition, setPlayerPosition] = useState(0);
 	const [showSlotModal, setShowSlotModal] = useState(false);
 	const [showQuizModal, setShowQuizModal] = useState(false);
@@ -33,17 +29,7 @@ export const GameBoard = () => {
 			questions: "パリの首都はどこ？",
 			options: ["パリ", "ロンドン", "東京"],
 		});
-		const joinRequestData = new RoomJoinRequest.Data();
-		  joinRequestData.playerId = 25212;
-		  joinRequestData.roomCode = "121515";
-	  
-		  const joinRequest = new RoomJoinRequest();
-		  joinRequest.data = joinRequestData;
-	  
-		  const message = new ClientMessage();
-		  message.roomJoinRequest = joinRequest;
-	  
-		  sendMessage(message);
+
 		setShowQuizModal(true);
 	};	  
 
