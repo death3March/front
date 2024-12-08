@@ -9,11 +9,12 @@
 
 ```
 - src
-  - features
-    - (domain)
+  - app
+    - (pathName)
       - components/
         - componentA.tsx
       - types/
+      - page.tsx
   - shared
     - components/
       - sharedComp.tsx
@@ -21,10 +22,10 @@
       - sampleHook.tsx
     - utils/
     - types/
-  - route.tsx // routeの定義
+  - router.tsx // routeの定義
 ```
 
 ## branchルール
 issue駆動でやる。
 
-ブランチ名は```issue/#(issue番号)```
+ブランチ名は```issue/(issue番号)```

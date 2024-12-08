@@ -1,9 +1,10 @@
 import { useParams } from "@tanstack/react-router";
 
-import { GameBoard } from "@/features/game/game-board";
 import { gameRoute } from "@/router";
 import { Container } from "@/shared/components/container";
 import { WebSocketProvider } from "@/shared/provider/websocket/websocket-provider";
+
+import { GameBoard } from "./components/game-board";
 
 export const Game = () => {
 	const { roomCode } = useParams({ from: gameRoute.id });

@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 
-import { JoinRoomForm } from "@/features/home/components/join-room-form";
+import { JoinRoomForm } from "@/app/home/components/join-room-form";
 import { gameRoute } from "@/router";
 
 export const Home: React.FC = () => {

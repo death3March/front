@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import { Map } from "@/features/game/components/map";
-import { Slot } from "@/features/game/components/slot";
 import { DialogWrapper } from "@/shared/components/dialog-wrapper";
 
-import { Quiz } from "./components/quiz";
-import { QuizModel } from "./types/quiz";
+import { QuizModel } from "../types/quiz";
+import { Map } from "./map";
+import { Quiz } from "./quiz";
+import { Slot } from "./slot";
 
 export const GameBoard = () => {
 	const [playerPosition, setPlayerPosition] = useState(0);
