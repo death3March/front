@@ -8,6 +8,7 @@ import { Quiz } from "./quiz";
 import { Slot } from "./slot";
 
 export const GameBoard = () => {
+	// @ts-expect-error setPlayerPositionは後で使う
 	const [playerPosition, setPlayerPosition] = useState(0);
 	const [showSlotModal, setShowSlotModal] = useState(false);
 	const [showQuizModal, setShowQuizModal] = useState(false);
