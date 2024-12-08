@@ -1,29 +1,40 @@
-import { FormEvent, useRef } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { Button } from "@/shared/ui/button";
+import { Form, FormField } from "@/shared/ui/form";
 import { Input } from "@/shared/ui/input";
 
 interface JoinRoomFormProps {
-	onSubmit: (roomCode: string) => void;
+	handleRoomJoin: (roomCode: string) => void;
 }
 
-export const JoinRoomForm = ({ onSubmit }: JoinRoomFormProps) => {
-	const inputRef = useRef<HTMLInputElement>(null);
+const roomCodeSchema = z.object({
+	roomCode: z.string().min(1).trim(),
+});
 
-	const handleSubmit = (e: FormEvent) => {
-		e.preventDefault();
-		const roomCode = inputRef.current?.value.trim();
-		if (roomCode) {
-			onSubmit(roomCode);
-		}
+export const JoinRoomForm = ({ handleRoomJoin }: JoinRoomFormProps) => {
+	const form = useForm<z.infer<typeof roomCodeSchema>>({
+		resolver: zodResolver(roomCodeSchema),
+	});
+
+	const onSubmit = (data: z.infer<typeof roomCodeSchema>) => {
+		handleRoomJoin(data.roomCode);
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className="flex w-64 flex-col space-y-2">
-			<Input type="text" placeholder="ルーム名を入力" ref={inputRef} />
-			<Button type="submit" variant="default">
-				参加
-			</Button>
-		</form>
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-64 flex-col space-y-2">
+				<FormField
+					control={form.control}
+					name="roomCode"
+					render={({ field }) => <Input type="text" placeholder="ルーム名を入力" {...field} />}
+				/>
+				<Button type="submit" variant="default" disabled={!form.formState.isValid || form.formState.isSubmitting}>
+					参加
+				</Button>
+			</form>
+		</Form>
 	);
 };
