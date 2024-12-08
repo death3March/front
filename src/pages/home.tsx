@@ -9,10 +9,10 @@ export const Home: React.FC = () => {
 
 	const handleRoomJoined = (roomName: string) => {
 		navigate({
-		  to: gameRoute.id,
-		  params: { roomName: roomName },
+			to: gameRoute.id,
+			params: { roomName: roomName },
 		});
-	  };
+	};
 
 	return (
 		<div className="flex h-screen flex-col items-center justify-center space-y-4">

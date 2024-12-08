@@ -1,13 +1,15 @@
-import { useState, useEffect  } from "react";
-import { useParams } from '@tanstack/react-router';
+import { useParams } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+
 import { Map } from "@/features/game/components/map";
 import { Slot } from "@/features/game/components/slot";
-import { DialogWrapper } from "@/shared/components/dialog-wrapper";
 import { gameRoute } from "@/router";
+import { DialogWrapper } from "@/shared/components/dialog-wrapper";
+import { ClientMessage, RoomJoinRequest } from "@/shared/provider/websocket/pb/client-message";
+import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
+
 import { Quiz } from "./components/quiz";
 import { QuizModel } from "./types/quiz";
-import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
-import { RoomJoinRequest, ClientMessage } from "@/shared/provider/websocket/pb/client-message";
 
 export const GameBoard = () => {
 	const { roomCode } = useParams({ from: gameRoute.id });
@@ -51,7 +53,7 @@ export const GameBoard = () => {
 
 			sendMessage(message);
 		}
-	}, [isConnected]);
+	}, [isConnected, roomCode, sendMessage]);
 
 	return (
 		<div>

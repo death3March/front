@@ -19,4 +19,4 @@ export const gameRoute = createRoute({
 	component: () => <Game />,
 });
 
-export const router = createRouter({ routeTree: rootRoute.addChildren([homeRoute,gameRoute]) });
+export const router = createRouter({ routeTree: rootRoute.addChildren([homeRoute, gameRoute]) });
