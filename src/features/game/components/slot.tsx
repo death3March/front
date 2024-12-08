@@ -1,7 +1,8 @@
-import cn from "classnames";
+import clsx from "clsx";
 import { motion } from "motion/react";
 
 import { useSlotAnimation } from "@/features/game/hooks/use-slot-animation";
+import { Button } from "@/shared/ui/button";
 
 interface SlotProps {
 	target: number;
@@ -52,16 +53,16 @@ export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
 					))}
 				</motion.div>
 			</div>
-			<button
+			<Button
 				onClick={stop}
-				className={cn("mt-2 px-4 py-2 rounded", {
-					"bg-blue-500 text-white": phase === "running",
-					"bg-gray-300 text-gray-600": phase !== "running",
+				className={clsx("mt-2 rounded bg-none px-4 py-2", {
+					"bg-blue-500 text-white hover:bg-blue-500/90": phase === "running",
+					"bg-gray-300 text-gray-600 hover:bg-gray-300/90": phase !== "running",
 				})}
 				disabled={phase !== "running"}
 			>
 				Stop
-			</button>
+			</Button>
 		</div>
 	);
 };
