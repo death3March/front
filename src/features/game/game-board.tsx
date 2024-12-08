@@ -31,7 +31,7 @@ export const GameBoard = () => {
 		});
 
 		setShowQuizModal(true);
-	};	  
+	};
 
 	return (
 		<div>
