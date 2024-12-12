@@ -1,3 +1,10 @@
 import { atom } from "jotai";
 
-export const userIdAtom = atom<string | null>(null);
+type User = {
+	id: string;
+	nickname: string;
+	potion?: number;
+};
+export const currentUserAtom = atom<User | null>(null);
+
+export const participatingUsersAtom = atom<User[]>([]);

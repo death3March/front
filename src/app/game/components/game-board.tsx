@@ -6,7 +6,7 @@ import { ClientMessageSchema, GameStartRequestSchema } from "@/api/client-messag
 import { DialogWrapper } from "@/shared/components/dialog-wrapper";
 import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
 import { messageStateAtom } from "@/shared/store/mesaage-state-atom";
-import { userIdAtom } from "@/shared/store/user-id-atom";
+import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
 import { Button } from "@/shared/ui/button";
 
 import { QuizModel } from "../types/quiz";
@@ -17,7 +17,9 @@ import { Slot } from "./slot";
 export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const { sendMessage } = useWebSocket();
 	const [messageState] = useAtom(messageStateAtom);
-	const [userId] = useAtom(userIdAtom);
+	const [currentUser] = useAtom(currentUserAtom);
+	const [participatingUsers] = useAtom(participatingUsersAtom);
+
 	// @ts-expect-error setPlayerPositionは後で使う
 	const [playerPosition, setPlayerPosition] = useState(0);
 	const [showSlotModal, setShowSlotModal] = useState(false);
@@ -50,7 +52,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 			type: {
 				value: create(GameStartRequestSchema, {
 					data: {
-						playerId: userId ?? "",
+						playerId: currentUser?.id ?? "",
 						roomCode,
 					},
 				}),
@@ -59,31 +61,53 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 		});
 		sendMessage(clientMessage);
 	};
-	return (
-		<div>
-			<Map playerPosition={playerPosition} />
 
-			<div className="mt-8 flex flex-col items-center">
-				<div className="flex space-x-4">
-					<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={openSlotModal}>
-						Open Slot
-					</Button>
-					<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={openQuizModal}>
-						Open Quiz
-					</Button>
+	if (messageState != null) {
+		if (messageState == "RoomJoinResponse") {
+			return (
+				<>
 					<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={startGame}>
 						Start Game
 					</Button>
-				</div>
-				{messageState && <div>{JSON.stringify(messageState)}</div>}
-				<DialogWrapper title="Slot Result" open={showSlotModal} onOpenChange={setShowSlotModal}>
-					<Slot target={target} symbols={symbols} />
-				</DialogWrapper>
 
-				<DialogWrapper title="Quiz" open={showQuizModal} onOpenChange={setShowQuizModal}>
-					<Quiz quiz={quiz} />
-				</DialogWrapper>
-			</div>
-		</div>
-	);
+					{participatingUsers.map((user) =>
+						user.id == currentUser?.id ? (
+							<div key={user.id}>{user.nickname} (You)</div>
+						) : (
+							<div key={user.id}>{user.nickname}</div>
+						),
+					)}
+				</>
+			);
+		} else if (messageState == "GameEnd") {
+			return <div>Game fineshed</div>;
+		} else {
+			return (
+				<div>
+					<Map playerPosition={playerPosition} />
+
+					<div className="mt-8 flex flex-col items-center">
+						<div className="flex space-x-4">
+							<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={openSlotModal}>
+								Open Slot
+							</Button>
+							<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={openQuizModal}>
+								Open Quiz
+							</Button>
+						</div>
+						{messageState && <div>{messageState}</div>}
+						<DialogWrapper title="Slot Result" open={showSlotModal} onOpenChange={setShowSlotModal}>
+							<Slot target={target} symbols={symbols} />
+						</DialogWrapper>
+
+						<DialogWrapper title="Quiz" open={showQuizModal} onOpenChange={setShowQuizModal}>
+							<Quiz quiz={quiz} />
+						</DialogWrapper>
+					</div>
+				</div>
+			);
+		}
+	} else {
+		return <div>Loading...</div>;
+	}
 };

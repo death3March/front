@@ -62,7 +62,6 @@ export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps
 		ws.current.onmessage = async (e) => {
 			const arrayBuffer = await e.data.arrayBuffer();
 			const data = fromBinary(ServerMessageSchema, new Uint8Array(arrayBuffer));
-			console.log("received message", data);
 			handleMessage(data);
 		};
 
