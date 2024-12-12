@@ -1,6 +1,6 @@
 export type MapCell = {
 	id: number;
-	type: "empty" | "quiz" | "distribution";
+	type: "NORMAL" | "QUIZ" | "OTOSHIDAMA" | "FURIDASHI";
 	label: string | null;
 };
 

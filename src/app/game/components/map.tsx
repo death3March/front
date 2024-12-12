@@ -1,9 +1,11 @@
+// Map.tsx
 import { useAtom } from "jotai/react";
 import { useMemo } from "react";
 
 import { mapSequenceAtom } from "@/shared/store/map-atom";
 
 import { MapCells } from "../config/map-cells";
+import { MapCell } from "./map-cell";
 
 interface MapProps {
 	playerPosition: number;
@@ -16,20 +18,27 @@ export const Map = ({ playerPosition }: MapProps) => {
 		return mapSequence.map((id) => MapCells.find((cell) => cell.id === id) || null);
 	}, [mapSequence]);
 
+	const isStartIndex = 0;
+	const lastIndex = orderedCells.length - 1;
+
 	return (
 		<div className="flex flex-col gap-4">
 			{orderedCells.map((cell, index) => {
 				if (!cell) return null;
 
+				const isStart = index === isStartIndex;
+				const isGoal = index === lastIndex;
+				const isActive = index === playerPosition;
+
 				return (
-					<div
+					<MapCell
 						key={`${cell.id}-${index}`}
-						className={`group relative grid h-[100px] w-full place-items-center rounded-md border border-gray-300 bg-white p-1 
-						${index === playerPosition ? "bg-yellow-100" : ""}`}
-					>
-						<div className="absolute -bottom-4 left-1/2 h-4 w-0.5 bg-gray-300 group-last:hidden" />
-						{cell.label}
-					</div>
+						label={cell.label}
+						type={cell.type}
+						isStart={isStart}
+						isGoal={isGoal}
+						isActive={isActive}
+					/>
 				);
 			})}
 		</div>
