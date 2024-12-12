@@ -46,13 +46,17 @@ export const useSlotAnimation = ({ target, itemHeight, symbols, visibleCount, ex
 				});
 		} else if (phase === "final") {
 			// Animate to final stop position
-			controls.start({
-				y: [0, finalY],
-				transition: {
-					duration: 2,
-					ease: [0.2, 1, 0.2, 1.1],
-				},
-			});
+			controls
+				.start({
+					y: [0, finalY],
+					transition: {
+						duration: 2,
+						ease: [0.2, 1, 0.2, 1.1],
+					},
+				})
+				.then(() => {
+					setPhase("completed");
+				});
 		}
 	}, [phase, controls, cycleHeight, finalY, extraCycles]);
 

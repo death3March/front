@@ -8,10 +8,10 @@ import { MapCells } from "../config/map-cells";
 import { MapCell } from "./map-cell";
 
 interface MapProps {
-	playerPosition: number;
+	playerPositions: number[];
 }
 
-export const Map = ({ playerPosition }: MapProps) => {
+export const Map = ({ playerPositions }: MapProps) => {
 	const [mapSequence] = useAtom(mapSequenceAtom);
 
 	const orderedCells = useMemo(() => {
@@ -28,7 +28,7 @@ export const Map = ({ playerPosition }: MapProps) => {
 
 				const isStart = index === isStartIndex;
 				const isGoal = index === lastIndex;
-				const isActive = index === playerPosition;
+				const isActive = playerPositions.includes(index);
 
 				return (
 					<MapCell
