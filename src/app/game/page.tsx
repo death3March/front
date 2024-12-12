@@ -11,8 +11,12 @@ export const Game = () => {
 
 	return (
 		<WebSocketProvider roomCode={roomCode}>
+			<h2 className="mx-4 my-2 flex items-center justify-end text-lg font-bold">
+				<span className="inline-block rounded-md border border-gray-300 bg-gray-100 px-3 py-0.5 font-mono text-gray-800">
+					{roomCode}
+				</span>
+			</h2>
 			<Container>
-				<h1 className="text-2xl font-bold">Game : {roomCode}</h1>
 				<GameBoard roomCode={roomCode} />
 			</Container>
 		</WebSocketProvider>
