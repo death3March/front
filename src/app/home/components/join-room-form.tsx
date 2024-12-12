@@ -17,6 +17,9 @@ const roomCodeSchema = z.object({
 export const JoinRoomForm = ({ handleRoomJoin }: JoinRoomFormProps) => {
 	const form = useForm<z.infer<typeof roomCodeSchema>>({
 		resolver: zodResolver(roomCodeSchema),
+		defaultValues: {
+			roomCode: "",
+		},
 	});
 
 	const onSubmit = (data: z.infer<typeof roomCodeSchema>) => {

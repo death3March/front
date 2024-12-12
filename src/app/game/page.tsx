@@ -8,13 +8,12 @@ import { GameBoard } from "./components/game-board";
 
 export const Game = () => {
 	const { roomCode } = useParams({ from: gameRoute.id });
-	const playerId = 25212;
 
 	return (
-		<WebSocketProvider roomCode={roomCode} playerId={playerId}>
+		<WebSocketProvider roomCode={roomCode}>
 			<Container>
 				<h1 className="text-2xl font-bold">Game : {roomCode}</h1>
-				<GameBoard />
+				<GameBoard roomCode={roomCode} />
 			</Container>
 		</WebSocketProvider>
 	);

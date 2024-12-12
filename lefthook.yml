@@ -9,6 +9,7 @@ pre-commit:
   commands:
     eslint:
       glob: "*.{js,ts,jsx,tsx}"
+      exclude: "src/api"
       run: pnpm lint:ci {staged_files}
     format:
       glob: "*.{js,ts,jsx,tsx}"
