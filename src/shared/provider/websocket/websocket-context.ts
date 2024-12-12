@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { ClientMessage } from "./pb/client-message";
+import { ClientMessage } from "@/api/client-message_pb";
 
 interface WebSocketContextValue {
 	ws: WebSocket | null;

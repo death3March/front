@@ -10,7 +10,7 @@ import tseslint from "typescript-eslint";
 import tailwindcssPlugin from "eslint-plugin-tailwindcss";
 
 export default tseslint.config(
-	{ ignores: ["dist", "src/shared/provider/websocket/pb"] },
+	{ ignores: ["dist", "src/api"] },
 	{
 		plugins: {
 			["@typescript-eslint"]: tseslint.plugin,

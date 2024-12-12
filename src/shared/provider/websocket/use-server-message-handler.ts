@@ -1,38 +1,62 @@
+import { useAtom } from "jotai/react";
 import { useCallback } from "react";
 
-import { ServerMessage } from "./pb/server-message";
+import { ServerMessage } from "@/api/server-message_pb";
+import { userIdAtom } from "@/shared/store/user-id-atom";
+
+import { messageStateAtom } from "../../store/mesaage-state-atom";
 
 export const useServerMessageHandler = () => {
-	return useCallback((data: ServerMessage) => {
-		if (data.has_playerTurnStart) {
-			const message = data.playerTurnStart;
-			console.log("Player turn start:", message);
-		} else if (data.has_sugorokuMoveUpdate) {
-			const message = data.sugorokuMoveUpdate;
-			console.log("Sugoroku move update:", message);
-		} else if (data.has_playerMovementDisplay) {
-			const message = data.playerMovementDisplay;
-			console.log("Player movement display:", message);
-		} else if (data.has_quizStart) {
-			const message = data.quizStart;
-			console.log("Quiz start:", message);
-		} else if (data.has_quizResult) {
-			const message = data.quizResult;
-			console.log("Quiz result:", message);
-		} else if (data.has_otoshidamaEvent) {
-			const message = data.otoshidamaEvent;
-			console.log("Otoshidama event:", message);
-		} else if (data.has_rankingUpdate) {
-			const message = data.rankingUpdate;
-			console.log("Ranking update:", message);
-		} else if (data.has_gameStart) {
-			const message = data.gameStart;
-			console.log("Game start:", message);
-		} else if (data.has_gameEnd) {
-			const message = data.gameEnd;
-			console.log("Game end:", message);
-		} else {
-			console.warn("Unknown server message type received:", data);
-		}
-	}, []);
+	const [, setMessageState] = useAtom(messageStateAtom);
+	const [, setUserId] = useAtom(userIdAtom);
+	return useCallback(
+		(data: ServerMessage) => {
+			switch (data.type.case) {
+				case "playerTurnStart":
+					console.log("Player turn start:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "sugorokuMoveUpdate":
+					console.log("Sugoroku move update:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "playerMovementDisplay":
+					console.log("Player movement display:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "quizStart":
+					console.log("Quiz start:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "quizResult":
+					console.log("Quiz result:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "otoshidamaEvent":
+					console.log("Otoshidama event:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "rankingUpdate":
+					console.log("Ranking update:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "gameStart":
+					console.log("Game start:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "gameEnd":
+					console.log("Game end:", data.type.value);
+					setMessageState(data.type.value.$typeName);
+					break;
+				case "roomJoinResponse":
+					console.log("Room join response:", data.type.value.data);
+					setMessageState(data.type.value.$typeName);
+					setUserId(data.type.value.data?.playerId ?? null);
+					break;
+				default:
+					console.warn("Unknown server message type received:", data);
+			}
+		},
+		[setMessageState, setUserId],
+	);
 };

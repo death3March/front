@@ -1,37 +1,38 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import { create, fromBinary, toBinary } from "@bufbuild/protobuf";
+import { ReactNode, useCallback, useEffect, useRef } from "react";
 
-import { ClientMessage, RoomJoinRequest } from "./pb/client-message";
-import { ServerMessage } from "./pb/server-message";
+import { ClientMessage, ClientMessageSchema } from "@/api/client-message_pb";
+import { ServerMessageSchema } from "@/api/server-message_pb";
+
 import { useServerMessageHandler } from "./use-server-message-handler";
 import { WebSocketContext } from "./websocket-context";
 
-interface WebSocketProviderProps {
-	playerId: number;
+export interface WebSocketProviderProps {
 	roomCode: string;
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
-export const WebSocketProvider = ({ playerId, roomCode, children }: WebSocketProviderProps) => {
-	const baseWsUrl = "ws://127.0.0.1:8080";
+export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps) => {
+	const baseWsUrl = import.meta.env.VITE_WS_URL;
 	const ws = useRef<WebSocket | null>(null);
 
 	const handleMessage = useServerMessageHandler();
 
 	const disconnectWebSocket = useCallback(() => {
 		if (ws.current) {
-			console.log("Disconnecting WebSocket...");
+			console.group("Disconnecting WebSocket...");
 			ws.current.close();
 			ws.current = null;
-			console.log("---WebSocket disconnected---");
+			console.log("WebSocket closed");
+			console.groupEnd();
 		}
 	}, []);
 
 	const sendMessage = useCallback((data: ClientMessage) => {
 		if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-			console.log("Sending message:", data.serializeBinary());
-			ws.current.send(data.serializeBinary());
+			const binary = toBinary(ClientMessageSchema, data);
+			ws.current.send(binary);
 		} else {
-			console.log(ws.current, ws.current?.readyState);
 			console.warn("WebSocket is not open. Cannot send message.");
 		}
 	}, []);
@@ -42,21 +43,26 @@ export const WebSocketProvider = ({ playerId, roomCode, children }: WebSocketPro
 		ws.current = new WebSocket(baseWsUrl);
 		ws.current.onopen = () => {
 			console.log("WebSocket connection opened");
-			const joinRequestData = new RoomJoinRequest.Data();
-			joinRequestData.playerId = playerId;
-			joinRequestData.roomCode = roomCode;
 
-			const joinRequest = new RoomJoinRequest();
-			joinRequest.data = joinRequestData;
+			const message = create(ClientMessageSchema, {
+				type: {
+					case: "roomJoinRequest",
+					value: {
+						type: "ROOM_JOIN_REQUEST",
+						data: {
+							roomCode: roomCode,
+						},
+					},
+				},
+			});
 
-			const message = new ClientMessage();
-			message.roomJoinRequest = joinRequest;
 			sendMessage(message);
 		};
 
-		ws.current.onmessage = (e) => {
-			const data: ServerMessage = e.data;
-			console.log("Received message:", e.data);
+		ws.current.onmessage = async (e) => {
+			const arrayBuffer = await e.data.arrayBuffer();
+			const data = fromBinary(ServerMessageSchema, new Uint8Array(arrayBuffer));
+			console.log("received message", data);
 			handleMessage(data);
 		};
 
@@ -67,7 +73,7 @@ export const WebSocketProvider = ({ playerId, roomCode, children }: WebSocketPro
 		ws.current.onerror = (err) => {
 			console.error("WebSocket error:", err);
 		};
-	}, [baseWsUrl, handleMessage, playerId, roomCode, sendMessage]);
+	}, [baseWsUrl, handleMessage, roomCode, sendMessage]);
 
 	useEffect(() => {
 		connectWebSocket();
