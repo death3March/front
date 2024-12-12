@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { motion } from "motion/react";
+import { useEffect } from "react";
 
 import { Button } from "@/shared/ui/button";
 
@@ -9,9 +10,10 @@ interface SlotProps {
 	target: number;
 	itemHeight?: number;
 	symbols: string[];
+	onSlotEnd: () => void;
 }
 
-export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
+export const Slot = ({ target, itemHeight = 100, symbols, onSlotEnd }: SlotProps) => {
 	// 見えるスロットの縦の数
 	const visibleCount = 3;
 	// stopが押されてから余分に回す数
@@ -28,6 +30,12 @@ export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
 		visibleCount,
 		extraCycles,
 	});
+
+	useEffect(() => {
+		if (phase === "completed") {
+			onSlotEnd();
+		}
+	}, [phase, onSlotEnd]);
 
 	return (
 		<div className="flex flex-col items-center">

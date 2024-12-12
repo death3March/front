@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 
+import { TurnEndNotification } from "@/api/client-message_pb";
 import {
 	GameEnd,
 	GameStart,
@@ -14,15 +15,16 @@ import {
 } from "@/api/server-message_pb";
 
 export type MessageState =
-	| PlayerTurnStart["$typeName"]
-	| SugorokuMoveUpdate["$typeName"]
-	| PlayerMovementDisplay["$typeName"]
-	| QuizStart["$typeName"]
-	| QuizResult["$typeName"]
-	| OtoshidamaEvent["$typeName"]
-	| RankingUpdate["$typeName"]
-	| GameStart["$typeName"]
-	| GameEnd["$typeName"]
-	| RoomJoinResponse["$typeName"];
+	| PlayerTurnStart
+	| SugorokuMoveUpdate
+	| PlayerMovementDisplay
+	| QuizStart
+	| QuizResult
+	| OtoshidamaEvent
+	| RankingUpdate
+	| GameStart
+	| GameEnd
+	| RoomJoinResponse
+	| TurnEndNotification;
 
 export const messageStateAtom = atom<MessageState | null>(null);

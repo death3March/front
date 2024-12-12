@@ -6,12 +6,11 @@ type Props = {
 	title: string;
 	children: React.ReactNode;
 	open: boolean;
-	onOpenChange: (open: boolean) => void;
 };
 
-export const DialogWrapper: FC<Props> = ({ title, children, open, onOpenChange }) => {
+export const DialogWrapper: FC<Props> = ({ title, children, open }) => {
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
+		<Dialog open={open}>
 			<DialogContent onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>

@@ -1,1 +1,1 @@
-export type SlotPhase = "running" | "slowing" | "final";
+export type SlotPhase = "running" | "slowing" | "final" | "completed";
