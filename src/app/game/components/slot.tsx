@@ -9,9 +9,10 @@ interface SlotProps {
 	target: number;
 	itemHeight?: number;
 	symbols: string[];
+	onSlotEnd: () => void;
 }
 
-export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
+export const Slot = ({ target, itemHeight = 100, symbols, onSlotEnd }: SlotProps) => {
 	// 見えるスロットの縦の数
 	const visibleCount = 3;
 	// stopが押されてから余分に回す数
@@ -63,6 +64,17 @@ export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
 				disabled={phase !== "running"}
 			>
 				Stop
+			</Button>
+
+			<Button
+				onClick={onSlotEnd}
+				className={clsx("mt-2 rounded bg-none px-4 py-2", {
+					"bg-blue-500 text-white hover:bg-blue-500/90": phase === "completed",
+					"bg-gray-300 text-gray-600 hover:bg-gray-300/90": phase !== "completed",
+				})}
+				disabled={phase !== "completed"}
+			>
+				end
 			</Button>
 		</div>
 	);

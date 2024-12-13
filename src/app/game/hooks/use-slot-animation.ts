@@ -1,7 +1,7 @@
 import { useAnimation } from "motion/react";
 import { useEffect, useState } from "react";
 
-import { SlotPhase } from "../types/slot-phase";
+type SlotPhase = "running" | "slowing" | "final" | "completed";
 
 interface SlotAnimationProps {
 	target: number;
@@ -17,7 +17,7 @@ export const useSlotAnimation = ({ target, itemHeight, symbols, visibleCount, ex
 
 	const cycleHeight = symbols.length * itemHeight;
 	const finalIndex = target + symbols.length;
-	const finalY = -(finalIndex * itemHeight - itemHeight * (visibleCount - 2));
+	const finalY = -(finalIndex * itemHeight - itemHeight * (visibleCount - 1));
 
 	useEffect(() => {
 		if (phase === "running") {
@@ -46,13 +46,17 @@ export const useSlotAnimation = ({ target, itemHeight, symbols, visibleCount, ex
 				});
 		} else if (phase === "final") {
 			// Animate to final stop position
-			controls.start({
-				y: [0, finalY],
-				transition: {
-					duration: 2,
-					ease: [0.2, 1, 0.2, 1.1],
-				},
-			});
+			controls
+				.start({
+					y: [0, finalY],
+					transition: {
+						duration: 2,
+						ease: [0.2, 1, 0.2, 1.1],
+					},
+				})
+				.then(() => {
+					setPhase("completed");
+				});
 		}
 	}, [phase, controls, cycleHeight, finalY, extraCycles]);
 

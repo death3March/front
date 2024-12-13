@@ -1,112 +1,129 @@
-import { create } from "@bufbuild/protobuf";
+import { redirect } from "@tanstack/react-router";
 import { useAtom } from "jotai/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { ClientMessageSchema, GameStartRequestSchema } from "@/api/client-message_pb";
-import { DialogWrapper } from "@/shared/components/dialog-wrapper";
+import { ModalContainer } from "@/app/game/components/modals/modal-container";
+import { symbols } from "@/app/game/config/slot-symbols";
+import { useGameActions } from "@/app/game/hooks/use-game-actions";
+import { useTaskProcessor } from "@/shared/hooks/use-task-processor";
 import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
-import { messageStateAtom } from "@/shared/store/mesaage-state-atom";
+import { gameStateAtom } from "@/shared/store/message-state-atom";
+import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
 import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
 import { Button } from "@/shared/ui/button";
 
-import { QuizModel } from "../types/quiz";
+import { useModal } from "../hooks/use-modal";
+import { QuizType } from "../types/quiz";
 import { Map } from "./map";
-import { Quiz } from "./quiz";
-import { Slot } from "./slot";
+import { PlayerList } from "./player-list";
 
 export const GameBoard = ({ roomCode }: { roomCode: string }) => {
-	const { sendMessage } = useWebSocket();
-	const [messageState] = useAtom(messageStateAtom);
-	const [currentUser] = useAtom(currentUserAtom);
-	const [participatingUsers] = useAtom(participatingUsersAtom);
-
-	// @ts-expect-error setPlayerPositionは後で使う
-	const [playerPosition, setPlayerPosition] = useState(0);
-	const [showSlotModal, setShowSlotModal] = useState(false);
-	const [showQuizModal, setShowQuizModal] = useState(false);
-	const [target, setTarget] = useState(0);
-	const [quiz, setQuiz] = useState<QuizModel>({
+	const { modalState, openExclusiveModal, closeAllModals } = useModal();
+	const [target, setMovementTarget] = useState(0);
+	const [quiz, setQuiz] = useState<QuizType>({
 		questions: "",
 		options: [],
 	});
 
-	const symbols = ["これ", "あ", "3げあ", "4", "5", "6"];
+	const { processNextTask } = useTaskProcessor({
+		onPlayerTurnStart: () => {
+			openExclusiveModal("showWhoseTurnModal");
+		},
+		onPlayerMovementDisplay: () => {
+			openExclusiveModal("showSlotModal");
+		},
+		onQuizStart: () => {
+			openExclusiveModal("showQuizModal");
+		},
+		onOtoshidamaEvent: () => {
+			openExclusiveModal("showOtoshidamaModal");
+		},
+		handleSetTurnUserID: (userID: string) => {
+			setTurnUserID(userID);
+		},
+		handleSetMovementTarget: (target: number) => {
+			setMovementTarget(target);
+			console.log("target", target);
+		},
+		handleSetQuiz: (quiz: QuizType) => {
+			setQuiz(quiz);
+		},
+	});
+	const { sendMessage } = useWebSocket();
+	const [gameState] = useAtom(gameStateAtom);
+	const [currentUser] = useAtom(currentUserAtom);
+	const [tasks] = useAtom(taskQueueAtom);
+	const [isTaskActive, setIsTaskActive] = useAtom(isTaskActiveAtom);
+	const [participatingUsers] = useAtom(participatingUsersAtom);
+	const [turnUserID, setTurnUserID] = useState("");
 
-	const openSlotModal = () => {
-		setTarget(Math.floor(Math.random() * symbols.length));
-		setShowSlotModal(true);
+	const { startGame, onTurnEnd, onAnswerQuiz } = useGameActions({
+		sendMessage,
+		currentUserId: currentUser?.id ?? "",
+		roomCode,
+	});
+
+	const handleCloseModal = () => {
+		closeAllModals();
+		setIsTaskActive(false);
 	};
 
-	const openQuizModal = () => {
-		setQuiz({
-			questions: "パリの首都はどこ？",
-			options: ["パリ", "ロンドン", "東京"],
+	if (!currentUser) {
+		// toast
+		redirect({
+			to: "/",
+			search: {},
 		});
+	}
 
-		setShowQuizModal(true);
-	};
+	useEffect(() => {
+		if (gameState == "GAME_START" && !isTaskActive && tasks.length > 0) {
+			processNextTask(2000);
+		}
+	}, [processNextTask, tasks, gameState, isTaskActive]);
 
-	const startGame = () => {
-		const clientMessage = create(ClientMessageSchema, {
-			$typeName: "ClientMessage",
-			type: {
-				value: create(GameStartRequestSchema, {
-					data: {
-						playerId: currentUser?.id ?? "",
-						roomCode,
-					},
-				}),
-				case: "gameStartRequest",
-			},
-		});
-		sendMessage(clientMessage);
-	};
-
-	if (messageState != null) {
-		if (messageState == "RoomJoinResponse") {
-			return (
-				<>
-					<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={startGame}>
-						Start Game
-					</Button>
-
-					{participatingUsers.map((user) =>
-						user.id == currentUser?.id ? (
-							<div key={user.id}>{user.nickname} (You)</div>
-						) : (
-							<div key={user.id}>{user.nickname}</div>
-						),
-					)}
-				</>
-			);
-		} else if (messageState == "GameEnd") {
-			return <div>Game fineshed</div>;
-		} else {
-			return (
-				<div>
-					<Map playerPosition={playerPosition} />
-
-					<div className="mt-8 flex flex-col items-center">
-						<div className="flex space-x-4">
-							<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={openSlotModal}>
-								Open Slot
-							</Button>
-							<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={openQuizModal}>
-								Open Quiz
-							</Button>
-						</div>
-						{messageState && <div>{messageState}</div>}
-						<DialogWrapper title="Slot Result" open={showSlotModal} onOpenChange={setShowSlotModal}>
-							<Slot target={target} symbols={symbols} />
-						</DialogWrapper>
-
-						<DialogWrapper title="Quiz" open={showQuizModal} onOpenChange={setShowQuizModal}>
-							<Quiz quiz={quiz} />
-						</DialogWrapper>
+	if (gameState === "ROOM_JOIN_RESPONSE") {
+		return (
+			<>
+				<div className="flex flex-col gap-4">
+					<div className="flex-1 overflow-auto">
+						<h2 className="pb-4 text-lg font-bold">ゲーム参加者</h2>
+						<PlayerList players={participatingUsers} currentUserId={currentUser?.id ?? ""} />
+					</div>
+					<div className="fixed bottom-8 left-0 w-full px-4">
+						<Button className="h-12 w-full" onClick={startGame}>
+							Start Game
+						</Button>
 					</div>
 				</div>
-			);
-		}
+			</>
+		);
+	} else if (gameState === "GAME_END") {
+		return <div>Game fineshed</div>;
+	} else if (gameState === "GAME_START") {
+		return (
+			<div className="flex h-full flex-col">
+				<div className="flex-1 overflow-auto">
+					<Map playerPositions={participatingUsers.map((user) => user.position ?? 0)} />
+				</div>
+				<div className="mt-8 flex flex-col items-center">
+					<ModalContainer
+						currentUser={currentUser!}
+						modalState={modalState}
+						onCloseModal={handleCloseModal}
+						onAnswerQuiz={onAnswerQuiz}
+						quiz={quiz}
+						target={target}
+						symbols={symbols}
+					/>
+				</div>
+				<div>
+					<Button className="w-full" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
+						{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
+					</Button>
+				</div>
+			</div>
+		);
 	} else {
 		return <div>Loading...</div>;
 	}
