@@ -4,14 +4,16 @@ import React, { useEffect } from "react";
 
 import { JoinRoomForm } from "@/app/home/components/join-room-form";
 import { gameRoute } from "@/router";
-import { participatingUsersAtom } from "@/shared/store/user-id-atom";
+import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
 
 export const Home: React.FC = () => {
 	const navigate = useNavigate();
 	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
+	const [, setCurrentUser] = useAtom(currentUserAtom);
 
 	useEffect(() => {
 		setParticipatingUsers([]);
+		setCurrentUser(null);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
