@@ -15,6 +15,7 @@ import { Button } from "@/shared/ui/button";
 import { useModal } from "../hooks/use-modal";
 import { QuizType } from "../types/quiz";
 import { Map } from "./map";
+import { PlayerList } from "./player-list";
 
 export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const { modalState, openExclusiveModal, closeAllModals } = useModal();
@@ -87,8 +88,8 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={startGame}>
 					Start Game
 				</Button>
-        
-        <div className="flex h-full flex-col gap-4">
+
+				<div className="flex h-full flex-col gap-4">
 					<div className="flex-1 overflow-auto">
 						<h2 className="pb-4 text-lg font-bold">ゲーム参加者</h2>
 						<PlayerList players={participatingUsers} currentUserId={currentUser?.id ?? ""} />
