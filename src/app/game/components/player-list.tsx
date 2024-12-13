@@ -1,8 +1,8 @@
-import { User } from "@/shared/store/user-id-atom";
+import { UserType } from "@/shared/types/user-type";
 import { Card, CardContent } from "@/shared/ui/card";
 
 type Props = {
-	players: User[];
+	players: UserType[];
 	currentUserId: string;
 };
 
