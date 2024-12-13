@@ -19,6 +19,7 @@ import { useModal } from "../hooks/use-modal";
 import { QuizModel } from "../types/quiz";
 import { Map } from "./map";
 import { Otoshidama } from "./otoshidama";
+import { PlayerList } from "./player-list";
 import { Quiz } from "./quiz";
 import { Slot } from "./slot";
 
@@ -149,19 +150,17 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	if (messageState != null) {
 		if (messageState.$typeName === "RoomJoinResponse") {
 			return (
-				<>
-					<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={startGame}>
-						Start Game
-					</Button>
-
-					{participatingUsers.map((user) =>
-						user.id == currentUser?.id ? (
-							<div key={user.id}>{user.nickname} (You)</div>
-						) : (
-							<div key={user.id}>{user.nickname}</div>
-						),
-					)}
-				</>
+				<div className="flex h-full flex-col gap-4">
+					<div className="flex-1 overflow-auto">
+						<h2 className="pb-4 text-lg font-bold">ゲーム参加者</h2>
+						<PlayerList players={participatingUsers} currentUserId={currentUser?.id ?? ""} />
+					</div>
+					<div>
+						<Button className="h-12 w-full" onClick={startGame}>
+							Start Game
+						</Button>
+					</div>
+				</div>
 			);
 		} else if (messageState.$typeName === "GameEnd") {
 			return <div>Game fineshed</div>;
@@ -185,7 +184,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 						</DialogWrapper>
 					</div>
 					<div>
-						<Button className="w-full" onClick={onTurnEnd} disabled={isWaitingTurnEnd}>
+						<Button className="h-12 w-full" onClick={onTurnEnd} disabled={isWaitingTurnEnd}>
 							{isWaitingTurnEnd ? "待機中" : "ターン終了"}
 						</Button>
 					</div>
