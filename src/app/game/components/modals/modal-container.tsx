@@ -33,19 +33,20 @@ export const ModalContainer = ({
 }: ModalContainerProps) => {
 	return (
 		<>
-			<DialogWrapper title={`${currentUser.nickname}のターンです`} open={modalState.showWhoseTurnModal}>
+			<DialogWrapper open={modalState.showWhoseTurnModal}>
+				{`${currentUser.nickname}のターンです`}
 				<Button onClick={onCloseModal}>OK</Button>
 			</DialogWrapper>
 
-			<DialogWrapper title="Slot Result" open={modalState.showSlotModal}>
+			<DialogWrapper className="min-h-screen" open={modalState.showSlotModal}>
 				<Slot target={target} symbols={symbols} onSlotEnd={onCloseModal} />
 			</DialogWrapper>
 
-			<DialogWrapper title="Quiz" open={modalState.showQuizModal}>
+			<DialogWrapper className="min-h-screen" open={modalState.showQuizModal}>
 				<Quiz quiz={quiz} onAnswer={onAnswerQuiz} />
 			</DialogWrapper>
 
-			<DialogWrapper title="Otoshidama" open={modalState.showOtoshidamaModal}>
+			<DialogWrapper className="min-h-screen" open={modalState.showOtoshidamaModal}>
 				<Otoshidama onOtoshidamaEnd={onCloseModal} />
 			</DialogWrapper>
 		</>
