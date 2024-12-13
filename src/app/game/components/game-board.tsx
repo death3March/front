@@ -85,10 +85,6 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	if (gameState === "ROOM_JOIN_RESPONSE") {
 		return (
 			<>
-				<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={startGame}>
-					Start Game
-				</Button>
-
 				<div className="flex flex-col gap-4">
 					<div className="flex-1 overflow-auto">
 						<h2 className="pb-4 text-lg font-bold">ゲーム参加者</h2>
