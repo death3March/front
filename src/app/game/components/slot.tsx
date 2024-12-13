@@ -31,7 +31,7 @@ export const Slot = ({ target, itemHeight = 100, symbols, onSlotEnd }: SlotProps
 	});
 
 	return (
-		<div className="flex flex-col items-center">
+		<div className="flex h-full flex-col items-center justify-center">
 			<div
 				className="relative overflow-hidden rounded-md border-4"
 				style={{
@@ -57,7 +57,7 @@ export const Slot = ({ target, itemHeight = 100, symbols, onSlotEnd }: SlotProps
 			</div>
 			<Button
 				onClick={stop}
-				className={clsx("mt-2 rounded bg-none px-4 py-2", {
+				className={clsx("mt-2 w-full rounded bg-none px-4 py-2", {
 					"bg-blue-500 text-white hover:bg-blue-500/90": phase === "running",
 					"bg-gray-300 text-gray-600 hover:bg-gray-300/90": phase !== "running",
 				})}
@@ -68,13 +68,13 @@ export const Slot = ({ target, itemHeight = 100, symbols, onSlotEnd }: SlotProps
 
 			<Button
 				onClick={onSlotEnd}
-				className={clsx("mt-2 rounded bg-none px-4 py-2", {
+				className={clsx("mt-2 w-full rounded bg-none px-4 py-2", {
 					"bg-blue-500 text-white hover:bg-blue-500/90": phase === "completed",
 					"bg-gray-300 text-gray-600 hover:bg-gray-300/90": phase !== "completed",
 				})}
 				disabled={phase !== "completed"}
 			>
-				end
+				閉じる
 			</Button>
 		</div>
 	);

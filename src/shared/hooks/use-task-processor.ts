@@ -19,7 +19,8 @@ type UseTaskProcessorProps = {
 	onPlayerTurnStart: () => void;
 	onPlayerMovementDisplay: () => void;
 	onQuizStart: () => void;
-	onOtoshidamaEvent: () => void;
+	onOtoshidamaEvent: (otoshidama_amount: number) => void;
+	handleSetOtoshidama: (otoshidama_amount: number) => void;
 	handleSetTurnUserID: (userID: string) => void;
 	handleSetMovementTarget: (target: number) => void;
 	handleSetQuiz: (quiz: QuizType) => void;
@@ -30,6 +31,7 @@ export const useTaskProcessor = ({
 	onPlayerMovementDisplay,
 	onQuizStart,
 	onOtoshidamaEvent,
+	handleSetOtoshidama,
 	handleSetTurnUserID,
 	handleSetMovementTarget,
 	handleSetQuiz,
@@ -88,8 +90,11 @@ export const useTaskProcessor = ({
 						handleQuizResult(task.type.value);
 						break;
 					case "otoshidamaEvent":
-						handleOtoshidamaEvent(task.type.value);
-						onOtoshidamaEvent();
+						handleOtoshidamaEvent({
+							data: task.type.value,
+							handleSetOtoshidama,
+						});
+						onOtoshidamaEvent(task.type.value.data!.otoshidamaAmount);
 						break;
 					case "rankingUpdate":
 						handleRankingUpdate(task.type.value);
@@ -114,6 +119,7 @@ export const useTaskProcessor = ({
 			onPlayerMovementDisplay,
 			onQuizStart,
 			onOtoshidamaEvent,
+			handleSetOtoshidama,
 			handleSetTurnUserID,
 			handleSetMovementTarget,
 			handleSetQuiz,
