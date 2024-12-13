@@ -1,91 +1,48 @@
-import { useAtom } from "jotai/react";
+import { useAtom } from "jotai";
 import { useCallback } from "react";
 
 import { ServerMessage } from "@/api/server-message_pb";
+import { useTaskQueue } from "@/shared/hooks/use-task-queue";
 import { mapSequenceAtom } from "@/shared/store/map-atom";
+import { gameStateAtom } from "@/shared/store/message-state-atom";
 import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
-
-import { messageStateAtom } from "../../store/message-state-atom";
+import { handleGameEnd, handleGameStart, handleRoomJoinResponse } from "@/shared/tasks";
 
 export const useServerMessageHandler = () => {
-	const [, setMessageState] = useAtom(messageStateAtom);
+	const { pushTask } = useTaskQueue();
 	const [currentUser, setUserId] = useAtom(currentUserAtom);
+	const [, setMapSequence] = useAtom(mapSequenceAtom);
 	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
-	const [, setMatSequence] = useAtom(mapSequenceAtom);
+	const [, setGameState] = useAtom(gameStateAtom);
 
 	return useCallback(
-		(data: ServerMessage) => {
-			console.group("Server message received", data.type.case);
-
-			const messageType = data.type.case;
-
-			if (messageType === "playerTurnStart") {
-				console.log("Player turn start:", data.type.value);
-				setMessageState(data.type.value);
-			} else if (messageType === "sugorokuMoveUpdate") {
-				console.log("Sugoroku move update:", data.type.value);
-				setMessageState(data.type.value);
-			} else if (messageType === "playerMovementDisplay") {
-				const playerId = data.type.value.data?.playerId;
-				const newPosition = data.type.value.data?.newPosition as number;
-
-				console.log("playerMovementDisplay", playerId, newPosition);
-				if (playerId && newPosition) {
-					setParticipatingUsers((prev) =>
-						prev.map((user) => (user.id === playerId ? { ...user, position: newPosition } : user)),
-					);
-					setMessageState(data.type.value);
-				}
-			} else if (messageType === "quizStart") {
-				console.log("Quiz start:", data.type.value);
-				setMessageState(data.type.value);
-			} else if (messageType === "quizResult") {
-				console.log("Quiz result:", data.type.value);
-				setMessageState(data.type.value);
-			} else if (messageType === "otoshidamaEvent") {
-				console.log("Otoshidama event:", data.type.value);
-				setMessageState(data.type.value);
-			} else if (messageType === "rankingUpdate") {
-				console.log("Ranking update:", data.type.value);
-				setMessageState(data.type.value);
-			} else if (messageType === "gameStart") {
-				console.log("Game start:", data.type.value);
-				setMatSequence(data.type.value.data?.map?.squares as number[]);
-				setMessageState(data.type.value);
-			} else if (messageType === "gameEnd") {
-				console.log("Game end:", data.type.value);
-				setMessageState(data.type.value);
-			} else if (messageType === "roomJoinResponse") {
-				console.log("Room join response:", data.type.value.data);
-				setMessageState(data.type.value);
-				console.log("current User", currentUser);
-
-				const playerId = data.type.value.data?.playerId;
-				const nickname = data.type.value.data?.nickname;
-
-				console.log(playerId);
-				if (playerId && nickname) {
-					if (currentUser === null) {
-						console.log("Setting user ID:", playerId);
-						setUserId({
-							id: playerId,
-							nickname: nickname,
-						});
-					}
-
-					setParticipatingUsers((prev) => {
-						if (prev.some((user) => user.id === playerId)) {
-							return prev;
-						}
-						return [...prev, { id: playerId, nickname }];
+		(task: ServerMessage) => {
+			switch (task.type.case) {
+				case "roomJoinResponse":
+					setGameState("ROOM_JOIN_RESPONSE");
+					handleRoomJoinResponse({
+						data: task.type.value,
+						currentUser: currentUser,
+						setUserId: setUserId,
+						setParticipatingUsers,
 					});
-				}
-			} else {
-				console.warn("Unknown server message type received:", data);
+					break;
+				// ゲームの軸を担うものはqueueに積まずに即座に処理する
+				case "gameStart":
+					setGameState("GAME_START");
+					handleGameStart({
+						data: task.type.value,
+						setMapSequence,
+					});
+					break;
+				case "gameEnd":
+					setGameState("GAME_END");
+					handleGameEnd(task.type.value);
+					break;
+				default:
+					pushTask(task);
 			}
-
-			console.groupEnd();
 		},
-		[setMessageState, setUserId, setParticipatingUsers, setMatSequence, currentUser],
+		[pushTask, currentUser, setUserId, setMapSequence, setParticipatingUsers, setGameState],
 	);
 };

@@ -31,6 +31,7 @@ export const WebSocketProvider = ({ roomCode, children, nickname }: WebSocketPro
 
 	const sendMessage = useCallback((data: ClientMessage) => {
 		if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+			console.log("Sending message:", data);
 			const binary = toBinary(ClientMessageSchema, data);
 			ws.current.send(binary);
 		} else {
@@ -64,6 +65,7 @@ export const WebSocketProvider = ({ roomCode, children, nickname }: WebSocketPro
 		ws.current.onmessage = async (e) => {
 			const arrayBuffer = await e.data.arrayBuffer();
 			const data = fromBinary(ServerMessageSchema, new Uint8Array(arrayBuffer));
+
 			handleMessage(data);
 		};
 
@@ -78,10 +80,8 @@ export const WebSocketProvider = ({ roomCode, children, nickname }: WebSocketPro
 
 	useEffect(() => {
 		connectWebSocket();
-		return () => {
-			disconnectWebSocket();
-		};
-	}, [disconnectWebSocket, connectWebSocket]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<WebSocketContext.Provider
