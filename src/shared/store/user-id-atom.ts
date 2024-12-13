@@ -1,10 +1,7 @@
 import { atom } from "jotai";
 
-export type User = {
-	id: string;
-	nickname: string;
-	position?: number;
-};
-export const currentUserAtom = atom<Pick<User, "id" | "nickname"> | null>(null);
+import { UserType } from "@/shared/types/user-type";
 
-export const participatingUsersAtom = atom<User[]>([]);
+export const currentUserAtom = atom<Pick<UserType, "id" | "nickname"> | null>(null);
+
+export const participatingUsersAtom = atom<UserType[]>([]);
