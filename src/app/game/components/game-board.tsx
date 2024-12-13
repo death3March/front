@@ -28,8 +28,9 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const [messageState] = useAtom(messageStateAtom);
 	const [currentUser] = useAtom(currentUserAtom);
 	const [participatingUsers] = useAtom(participatingUsersAtom);
-	const [isPendingTurnEnd, setIsPendingTurnEnd] = useState(true);
+	const [isWaitingTurnEnd, setIsWaitingTurnEnd] = useState(false);
 	const [isActionEnd, setIsActionEnd] = useState(false);
+	const [isMoved, setIsMoved] = useState(false);
 
 	if (!currentUser) {
 		// toast
@@ -50,20 +51,24 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	useEffect(() => {
 		if (messageState) {
 			if (messageState.$typeName === "PlayerTurnStart") {
-				setIsPendingTurnEnd(false);
-				setIsActionEnd(false);
+				setIsMoved(false);
+				setIsWaitingTurnEnd(false);
 			}
-			if (messageState.$typeName === "PlayerMovementDisplay") {
+			if (messageState.$typeName === "PlayerMovementDisplay" && !isMoved) {
+				setIsWaitingTurnEnd(false);
+				setIsActionEnd(false);
 				const playerId = messageState.data?.playerId;
 				const newPosition = messageState.data?.newPosition;
+				console.log("participatingUsers", participatingUsers);
 				if (playerId === currentUser?.id) {
 					console.log("setTarget", newPosition);
 					setTarget(newPosition!);
 					setModalStateWithExclusion(messageState.$typeName);
+					setIsMoved(true);
 				}
 			}
 
-			if (messageState.$typeName === "QuizStart" && !isPendingTurnEnd && !modalState.showQuizModal && !isActionEnd) {
+			if (messageState.$typeName === "QuizStart" && !modalState.showQuizModal && !isActionEnd) {
 				setQuiz({
 					questions: messageState.data?.quizQuestion ?? "",
 					options: messageState.data?.options ?? [],
@@ -71,27 +76,14 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				setModalStateWithExclusion(messageState.$typeName);
 			}
 
-			if (
-				messageState.$typeName === "OtoshidamaEvent" &&
-				!isPendingTurnEnd &&
-				!modalState.showSlotModal &&
-				!isActionEnd
-			) {
+			if (messageState.$typeName === "OtoshidamaEvent" && !modalState.showSlotModal && !isActionEnd) {
 				setModalStateWithExclusion(messageState.$typeName);
 			}
 
 			console.log("messageState", messageState);
 		}
-	}, [
-		setModalStateWithExclusion,
-		isPendingTurnEnd,
-		currentUser?.id,
-		modalState.showQuizModal,
-		modalState.showSlotModal,
-		modalState.showOtoshidamaModal,
-		isActionEnd,
-		messageState,
-	]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [setModalStateWithExclusion, currentUser?.id, messageState]);
 
 	const startGame = () => {
 		const clientMessage = create(ClientMessageSchema, {
@@ -110,6 +102,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	};
 
 	const onTurnEnd = () => {
+		console.log("onTurnEnd");
 		const clientMessage = create(ClientMessageSchema, {
 			$typeName: "ClientMessage",
 			type: {
@@ -122,6 +115,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 			},
 		});
 		sendMessage(clientMessage);
+		setIsWaitingTurnEnd(true);
 	};
 
 	const onAnswer = (answer: string) => {
@@ -144,13 +138,11 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 
 	const onOtoshidamaEnd = () => {
 		setModalStateWithExclusion("TurnEndNotification");
-		setIsPendingTurnEnd(true);
 		setIsActionEnd(true);
 	};
 
 	const onSlotEnd = () => {
 		setModalStateWithExclusion("TurnEndNotification");
-		setIsPendingTurnEnd(true);
 		setIsActionEnd(true);
 	};
 
@@ -193,7 +185,9 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 						</DialogWrapper>
 					</div>
 					<div>
-						<Button onClick={onTurnEnd}>End Game</Button>
+						<Button className="w-full" onClick={onTurnEnd} disabled={isWaitingTurnEnd}>
+							{isWaitingTurnEnd ? "待機中" : "ターン終了"}
+						</Button>
 					</div>
 				</div>
 			);
