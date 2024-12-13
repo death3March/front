@@ -17,10 +17,11 @@ export const Home: React.FC = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleRoomJoin = (roomCode: string) => {
+	const handleRoomJoin = (data: { roomCode: string; nickname: string }) => {
 		navigate({
 			to: gameRoute.id,
-			params: { roomCode: roomCode },
+			params: { roomCode: data.roomCode },
+			search: { nickname: data.nickname },
 		});
 	};
 
