@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { QuizType } from "@/app/game/types/quiz";
 import { useTaskQueue } from "@/shared/hooks/use-task-queue";
 import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
-import { participatingUsersAtom } from "@/shared/store/user-id-atom";
+import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
 import {
 	handleOtoshidamaEvent,
 	handlePlayerMovementDisplay,
@@ -20,8 +20,8 @@ type UseTaskProcessorProps = {
 	onPlayerMovementDisplay: () => void;
 	onQuizStart: () => void;
 	onOtoshidamaEvent: (otoshidama_amount: number) => void;
-	handleSetOtoshidama: (otoshidama_amount: number) => void;
 	handleSetTurnUserID: (userID: string) => void;
+	handleSetIncreasedOtoshidama: (amount: number) => void;
 	handleSetMovementTarget: (target: number) => void;
 	handleSetQuiz: (quiz: QuizType) => void;
 };
@@ -31,8 +31,8 @@ export const useTaskProcessor = ({
 	onPlayerMovementDisplay,
 	onQuizStart,
 	onOtoshidamaEvent,
-	handleSetOtoshidama,
 	handleSetTurnUserID,
+	handleSetIncreasedOtoshidama,
 	handleSetMovementTarget,
 	handleSetQuiz,
 }: UseTaskProcessorProps) => {
@@ -40,6 +40,7 @@ export const useTaskProcessor = ({
 	const [tasks] = useAtom(taskQueueAtom);
 	const [isTaskActive] = useAtom(isTaskActiveAtom);
 	const [, setIsTaskActive] = useAtom(isTaskActiveAtom);
+	const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
 
 	// タスクを処理する
@@ -91,8 +92,11 @@ export const useTaskProcessor = ({
 						break;
 					case "otoshidamaEvent":
 						handleOtoshidamaEvent({
+							handleSetIncreasedOtoshidama,
+							currentUserId: currentUser?.id,
+							setCurrentUser,
 							data: task.type.value,
-							handleSetOtoshidama,
+							setParticipatingUsers,
 						});
 						onOtoshidamaEvent(task.type.value.data!.otoshidamaAmount);
 						break;
@@ -119,10 +123,12 @@ export const useTaskProcessor = ({
 			onPlayerMovementDisplay,
 			onQuizStart,
 			onOtoshidamaEvent,
-			handleSetOtoshidama,
 			handleSetTurnUserID,
 			handleSetMovementTarget,
 			handleSetQuiz,
+			handleSetIncreasedOtoshidama,
+			setCurrentUser,
+			currentUser,
 		],
 	);
 

@@ -17,10 +17,7 @@ type ModalContainerProps = {
 	};
 	target: number;
 	symbols: string[];
-	otoshidama: {
-		total: number;
-		get: number;
-	};
+	increasedOtoshidama: number;
 	quiz: QuizType;
 	onCloseModal: () => void;
 	onAnswerQuiz: (answer: string) => void;
@@ -31,7 +28,7 @@ export const ModalContainer = ({
 	modalState,
 	target,
 	symbols,
-	otoshidama,
+	increasedOtoshidama,
 	quiz,
 	onCloseModal,
 	onAnswerQuiz,
@@ -52,7 +49,7 @@ export const ModalContainer = ({
 			</DialogWrapper>
 
 			<DialogWrapper className="min-h-screen" open={modalState.showOtoshidamaModal}>
-				<Otoshidama otoshidama={otoshidama} onOtoshidamaEnd={onCloseModal} />
+				<Otoshidama increasedOtoshidama={increasedOtoshidama} onOtoshidamaEnd={onCloseModal} />
 			</DialogWrapper>
 		</>
 	);

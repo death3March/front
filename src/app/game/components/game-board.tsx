@@ -1,5 +1,6 @@
 import { redirect } from "@tanstack/react-router";
 import { useAtom } from "jotai/react";
+import { Coins } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { ModalContainer } from "@/app/game/components/modals/modal-container";
@@ -20,17 +21,11 @@ import { PlayerList } from "./player-list";
 export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const { modalState, openExclusiveModal, closeAllModals } = useModal();
 	const [target, setMovementTarget] = useState(0);
-	const [otoshidama, setOtoshidama] = useState<{
-		total: number;
-		get: number;
-	}>({
-		total: 0,
-		get: 0,
-	});
 	const [quiz, setQuiz] = useState<QuizType>({
 		questions: "",
 		options: [],
 	});
+	const [increasedOtoshidama, setIncreasedOtoshidama] = useState(0);
 
 	const { processNextTask } = useTaskProcessor({
 		onPlayerTurnStart: () => {
@@ -45,18 +40,15 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 		onOtoshidamaEvent: () => {
 			openExclusiveModal("showOtoshidamaModal");
 		},
-		handleSetOtoshidama: (otoshidama_amount: number) => {
-			setOtoshidama((prev) => ({
-				total: prev.total + otoshidama_amount,
-				get: otoshidama_amount,
-			}));
-		},
 		handleSetTurnUserID: (userID: string) => {
 			setTurnUserID(userID);
 		},
 		handleSetMovementTarget: (target: number) => {
 			setMovementTarget(target);
 			console.log("target", target);
+		},
+		handleSetIncreasedOtoshidama: (amount: number) => {
+			setIncreasedOtoshidama(amount);
 		},
 		handleSetQuiz: (quiz: QuizType) => {
 			setQuiz(quiz);
@@ -123,10 +115,11 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	} else if (gameState === "GAME_START") {
 		return (
 			<div className="flex h-full flex-col">
-				<div className="text-2xl font-bold">
-					<p>{currentUser?.nickname ?? ""}</p>
-					<p>獲得額: {otoshidama.total}</p>
+				<div className=" fixed left-4 top-4 z-30 flex items-center rounded-lg bg-white p-2 shadow-md">
+					<Coins className="mr-2 size-6 text-yellow-500" />
+					<p className="text-lg font-bold text-gray-800">{currentUser?.otoshidama ? currentUser?.otoshidama : 0}</p>
 				</div>
+
 				<div className="flex-1 overflow-auto">
 					<Map playerPositions={participatingUsers.map((user) => user.position ?? 0)} />
 				</div>
@@ -139,7 +132,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 						quiz={quiz}
 						target={target}
 						symbols={symbols}
-						otoshidama={otoshidama}
+						increasedOtoshidama={increasedOtoshidama}
 					/>
 				</div>
 				<div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-center bg-white shadow-md">
