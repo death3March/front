@@ -1,5 +1,10 @@
 import { OtoshidamaEvent } from "@/api/server-message_pb";
 
-export const handleOtoshidamaEvent = (data: OtoshidamaEvent) => {
-	console.log("Otoshidama event:", data.data);
+type Props = {
+	data: OtoshidamaEvent;
+	handleSetOtoshidama: (otoshidama: number) => void;
+};
+
+export const handleOtoshidamaEvent = ({ data, handleSetOtoshidama }: Props) => {
+	handleSetOtoshidama(data.data?.otoshidamaAmount ?? 0);
 };
