@@ -87,7 +87,14 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 			<>
 				<div className="flex flex-col gap-4">
 					<div className="flex-1 overflow-auto">
-						<h2 className="pb-4 text-lg font-bold">ゲーム参加者</h2>
+						<div className="flex items-center justify-between pb-4">
+							<h2 className="text-lg font-bold">ゲーム参加者</h2>
+							<h3 className="flex items-center justify-end text-lg font-bold">
+								<span className="inline-block rounded-md border border-gray-300 bg-gray-100 px-2 py-0.5 font-mono text-gray-800">
+									{roomCode}
+								</span>
+							</h3>
+						</div>
 						<PlayerList players={participatingUsers} currentUserId={currentUser?.id ?? ""} />
 					</div>
 					<div className="fixed bottom-8 left-0 w-full px-4">
