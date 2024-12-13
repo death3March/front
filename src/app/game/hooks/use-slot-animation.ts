@@ -17,7 +17,7 @@ export const useSlotAnimation = ({ target, itemHeight, symbols, visibleCount, ex
 
 	const cycleHeight = symbols.length * itemHeight;
 	const finalIndex = target + symbols.length;
-	const finalY = -(finalIndex * itemHeight - itemHeight * (visibleCount - 2));
+	const finalY = -(finalIndex * itemHeight - itemHeight * (visibleCount - 1));
 
 	useEffect(() => {
 		if (phase === "running") {

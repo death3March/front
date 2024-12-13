@@ -68,7 +68,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				}
 			}
 
-			if (messageState.$typeName === "QuizStart" && !modalState.showQuizModal && !isActionEnd) {
+			if (messageState.$typeName === "QuizStart" && !modalState.showSlotModal && !isActionEnd) {
 				setQuiz({
 					questions: messageState.data?.quizQuestion ?? "",
 					options: messageState.data?.options ?? [],
