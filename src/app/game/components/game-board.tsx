@@ -89,12 +89,12 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 					Start Game
 				</Button>
 
-				<div className="flex h-full flex-col gap-4">
+				<div className="flex flex-col gap-4">
 					<div className="flex-1 overflow-auto">
 						<h2 className="pb-4 text-lg font-bold">ゲーム参加者</h2>
 						<PlayerList players={participatingUsers} currentUserId={currentUser?.id ?? ""} />
 					</div>
-					<div>
+					<div className="fixed bottom-8 left-0 w-full px-4">
 						<Button className="h-12 w-full" onClick={startGame}>
 							Start Game
 						</Button>
