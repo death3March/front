@@ -87,7 +87,14 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 			<>
 				<div className="flex flex-col gap-4">
 					<div className="flex-1 overflow-auto">
-						<h2 className="pb-4 text-lg font-bold">ゲーム参加者</h2>
+						<div className="flex items-center justify-between pb-4">
+							<h2 className="text-lg font-bold">ゲーム参加者</h2>
+							<h3 className="flex items-center justify-end text-lg font-bold">
+								<span className="inline-block rounded-md border border-gray-300 bg-gray-100 px-2 py-0.5 font-mono text-gray-800">
+									{roomCode}
+								</span>
+							</h3>
+						</div>
 						<PlayerList players={participatingUsers} currentUserId={currentUser?.id ?? ""} />
 					</div>
 					<div className="fixed bottom-8 left-0 w-full px-4">
@@ -117,10 +124,16 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 						symbols={symbols}
 					/>
 				</div>
-				<div>
-					<Button className="w-full" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
-						{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
-					</Button>
+				<div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-center bg-white shadow-md">
+					<div className="w-full px-4">
+						<Button
+							className="w-full rounded-lg bg-gray-800 font-semibold text-white transition hover:bg-gray-600"
+							onClick={onTurnEnd}
+							disabled={turnUserID != currentUser!.id}
+						>
+							{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
+						</Button>
+					</div>
 				</div>
 			</div>
 		);
