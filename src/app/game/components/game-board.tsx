@@ -87,14 +87,18 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={startGame}>
 					Start Game
 				</Button>
-
-				{participatingUsers.map((user) =>
-					user.id == currentUser?.id ? (
-						<div key={user.id}>{user.nickname} (You)</div>
-					) : (
-						<div key={user.id}>{user.nickname}</div>
-					),
-				)}
+        
+        <div className="flex h-full flex-col gap-4">
+					<div className="flex-1 overflow-auto">
+						<h2 className="pb-4 text-lg font-bold">ゲーム参加者</h2>
+						<PlayerList players={participatingUsers} currentUserId={currentUser?.id ?? ""} />
+					</div>
+					<div>
+						<Button className="h-12 w-full" onClick={startGame}>
+							Start Game
+						</Button>
+					</div>
+				</div>
 			</>
 		);
 	} else if (gameState === "GAME_END") {
