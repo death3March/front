@@ -13,11 +13,16 @@ import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-
 import { Button } from "@/shared/ui/button";
 
 import { useModal } from "../hooks/use-modal";
-import { QuizModel } from "../types/quiz";
+import { QuizType } from "../types/quiz";
 import { Map } from "./map";
 
 export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const { modalState, openExclusiveModal, closeAllModals } = useModal();
+	const [target, setMovementTarget] = useState(0);
+	const [quiz, setQuiz] = useState<QuizType>({
+		questions: "",
+		options: [],
+	});
 
 	const { processNextTask } = useTaskProcessor({
 		onPlayerTurnStart: () => {
@@ -32,6 +37,16 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 		onOtoshidamaEvent: () => {
 			openExclusiveModal("showOtoshidamaModal");
 		},
+		handleSetTurnUserID: (userID: string) => {
+			setTurnUserID(userID);
+		},
+		handleSetMovementTarget: (target: number) => {
+			setMovementTarget(target);
+			console.log("target", target);
+		},
+		handleSetQuiz: (quiz: QuizType) => {
+			setQuiz(quiz);
+		},
 	});
 	const { sendMessage } = useWebSocket();
 	const [gameState] = useAtom(gameStateAtom);
@@ -39,7 +54,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const [tasks] = useAtom(taskQueueAtom);
 	const [isTaskActive, setIsTaskActive] = useAtom(isTaskActiveAtom);
 	const [participatingUsers] = useAtom(participatingUsersAtom);
-	const [isWaitingTurnEnd, setIsWaitingTurnEnd] = useState(false);
+	const [turnUserID, setTurnUserID] = useState("");
 
 	const { startGame, onTurnEnd, onAnswerQuiz } = useGameActions({
 		sendMessage,
@@ -60,21 +75,11 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 		});
 	}
 
-	const [target, setTarget] = useState(0);
-	const [quiz, setQuiz] = useState<QuizModel>({
-		questions: "",
-		options: [],
-	});
-
 	useEffect(() => {
 		if (gameState == "GAME_START" && !isTaskActive && tasks.length > 0) {
 			processNextTask(2000);
 		}
 	}, [processNextTask, tasks, gameState, isTaskActive]);
-
-	useEffect(() => {
-		console.log("showTurnModal", modalState);
-	}, [modalState]);
 
 	if (gameState === "ROOM_JOIN_RESPONSE") {
 		return (
@@ -102,6 +107,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				</div>
 				<div className="mt-8 flex flex-col items-center">
 					<ModalContainer
+						currentUser={currentUser!}
 						modalState={modalState}
 						onCloseModal={handleCloseModal}
 						onAnswerQuiz={onAnswerQuiz}
@@ -111,8 +117,8 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 					/>
 				</div>
 				<div>
-					<Button className="w-full" onClick={onTurnEnd} disabled={isWaitingTurnEnd}>
-						{isWaitingTurnEnd ? "待機中" : "ターン終了"}
+					<Button className="w-full" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
+						{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
 					</Button>
 				</div>
 			</div>

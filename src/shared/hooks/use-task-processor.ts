@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { useCallback } from "react";
 
+import { QuizType } from "@/app/game/types/quiz";
 import { useTaskQueue } from "@/shared/hooks/use-task-queue";
 import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
 import { participatingUsersAtom } from "@/shared/store/user-id-atom";
@@ -19,6 +20,9 @@ type UseTaskProcessorProps = {
 	onPlayerMovementDisplay: () => void;
 	onQuizStart: () => void;
 	onOtoshidamaEvent: () => void;
+	handleSetTurnUserID: (userID: string) => void;
+	handleSetMovementTarget: (target: number) => void;
+	handleSetQuiz: (quiz: QuizType) => void;
 };
 
 export const useTaskProcessor = ({
@@ -26,6 +30,9 @@ export const useTaskProcessor = ({
 	onPlayerMovementDisplay,
 	onQuizStart,
 	onOtoshidamaEvent,
+	handleSetTurnUserID,
+	handleSetMovementTarget,
+	handleSetQuiz,
 }: UseTaskProcessorProps) => {
 	const { popTask } = useTaskQueue();
 	const [tasks] = useAtom(taskQueueAtom);
@@ -65,11 +72,16 @@ export const useTaskProcessor = ({
 						handlePlayerMovementDisplay({
 							data: task.type.value,
 							setParticipatingUsers,
+							handleSetTurnUserID,
+							handleSetMovementTarget,
 						});
 						onPlayerMovementDisplay();
 						break;
 					case "quizStart":
-						handleQuizStart(task.type.value);
+						handleQuizStart({
+							data: task.type.value,
+							handleSetQuiz,
+						});
 						onQuizStart();
 						break;
 					case "quizResult":
@@ -102,6 +114,9 @@ export const useTaskProcessor = ({
 			onPlayerMovementDisplay,
 			onQuizStart,
 			onOtoshidamaEvent,
+			handleSetTurnUserID,
+			handleSetMovementTarget,
+			handleSetQuiz,
 		],
 	);
 

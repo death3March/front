@@ -45,6 +45,7 @@ export function useGameActions({ sendMessage, currentUserId, roomCode }: Props) 
 	};
 
 	const onAnswerQuiz = (answer: string) => {
+		console.log("answer", answer);
 		const clientMessage = create(ClientMessageSchema, {
 			$typeName: "ClientMessage",
 			type: {
@@ -57,6 +58,7 @@ export function useGameActions({ sendMessage, currentUserId, roomCode }: Props) 
 				case: "quizAnswer",
 			},
 		});
+		console.log("clientMessage", clientMessage);
 		sendMessage(clientMessage);
 	};
 

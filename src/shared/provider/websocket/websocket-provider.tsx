@@ -31,6 +31,7 @@ export const WebSocketProvider = ({ roomCode, children, nickname }: WebSocketPro
 
 	const sendMessage = useCallback((data: ClientMessage) => {
 		if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+			console.log("Sending message:", data);
 			const binary = toBinary(ClientMessageSchema, data);
 			ws.current.send(binary);
 		} else {

@@ -1,6 +1,4 @@
-// TODO: Quiz をサーバー側と合わせる
-
-export type QuizModel = {
+export type QuizType = {
 	questions: string;
 	options: string[];
 };

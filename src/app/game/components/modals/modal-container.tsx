@@ -1,12 +1,14 @@
 import { DialogWrapper } from "@/shared/components/dialog-wrapper";
+import { UserType } from "@/shared/types/user-type";
 import { Button } from "@/shared/ui/button";
 
-import { QuizModel } from "../../types/quiz";
+import { QuizType } from "../../types/quiz";
 import { Otoshidama } from "../otoshidama";
 import { Quiz } from "../quiz";
 import { Slot } from "../slot";
 
 type ModalContainerProps = {
+	currentUser: UserType;
 	modalState: {
 		showWhoseTurnModal: boolean;
 		showSlotModal: boolean;
@@ -15,12 +17,13 @@ type ModalContainerProps = {
 	};
 	target: number;
 	symbols: string[];
-	quiz: QuizModel;
+	quiz: QuizType;
 	onCloseModal: () => void;
 	onAnswerQuiz: (answer: string) => void;
 };
 
 export const ModalContainer = ({
+	currentUser,
 	modalState,
 	target,
 	symbols,
@@ -30,8 +33,7 @@ export const ModalContainer = ({
 }: ModalContainerProps) => {
 	return (
 		<>
-			<DialogWrapper title="Whose Turn" open={modalState.showWhoseTurnModal}>
-				<div>your turn</div>
+			<DialogWrapper title={`${currentUser.nickname}のターンです`} open={modalState.showWhoseTurnModal}>
 				<Button onClick={onCloseModal}>OK</Button>
 			</DialogWrapper>
 
