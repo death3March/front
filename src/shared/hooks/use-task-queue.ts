@@ -1,11 +1,15 @@
 import { useAtom } from "jotai";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 import { ServerMessage } from "@/api/server-message_pb";
 import { taskQueueAtom } from "@/shared/store/task-atom";
 
 export const useTaskQueue = () => {
-	const [, setTasks] = useAtom(taskQueueAtom);
+	const [task, setTasks] = useAtom(taskQueueAtom);
+
+	useEffect(() => {
+		console.log("taskQueue is updated", task);
+	}, [task]);
 
 	const pushTask = useCallback(
 		(task: ServerMessage) => {
