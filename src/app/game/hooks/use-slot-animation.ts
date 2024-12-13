@@ -1,7 +1,7 @@
 import { useAnimation } from "motion/react";
 import { useEffect, useState } from "react";
 
-import { SlotPhase } from "../types/slot-phase";
+type SlotPhase = "running" | "slowing" | "final" | "completed";
 
 interface SlotAnimationProps {
 	target: number;
