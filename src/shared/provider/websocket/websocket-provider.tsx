@@ -10,9 +10,10 @@ import { WebSocketContext } from "./websocket-context";
 export interface WebSocketProviderProps {
 	roomCode: string;
 	children: ReactNode;
+	nickname: string;
 }
 
-export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps) => {
+export const WebSocketProvider = ({ roomCode, children, nickname }: WebSocketProviderProps) => {
 	const baseWsUrl = import.meta.env.VITE_WS_URL;
 	const ws = useRef<WebSocket | null>(null);
 
@@ -51,6 +52,7 @@ export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps
 						type: "ROOM_JOIN_REQUEST",
 						data: {
 							roomCode: roomCode,
+							nickname: nickname,
 						},
 					},
 				},
@@ -72,7 +74,7 @@ export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps
 		ws.current.onerror = (err) => {
 			console.error("WebSocket error:", err);
 		};
-	}, [baseWsUrl, handleMessage, roomCode, sendMessage]);
+	}, [baseWsUrl, handleMessage, roomCode, sendMessage, nickname]);
 
 	useEffect(() => {
 		connectWebSocket();

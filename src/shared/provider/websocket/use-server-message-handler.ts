@@ -61,7 +61,7 @@ export const useServerMessageHandler = () => {
 				console.log("current User", currentUser);
 
 				const playerId = data.type.value.data?.playerId;
-				const nickname = "testda";
+				const nickname = data.type.value.data?.nickname;
 
 				console.log(playerId);
 				if (playerId && nickname) {
