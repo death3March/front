@@ -120,7 +120,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 			<div className="flex h-full flex-col">
 				<div className=" fixed left-4 top-4 z-30 flex items-center rounded-lg bg-white p-2 shadow-md">
 					<Coins className="mr-2 size-6 text-yellow-500" />
-					<p className="text-lg font-bold text-gray-800">{currentUser?.otoshidama ? currentUser?.otoshidama : 0}</p>
+					<p className="text-lg font-bold text-gray-800">{currentUser?.otoshidama ? currentUser?.otoshidama : 0}円</p>
 				</div>
 
 				<div className="flex-1 pt-16">
@@ -150,6 +150,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 						)}
 					</div>
 				</div>
+				<p className="fixed bottom-2 left-2 text-xs text-white">design by freepik</p>
 			</div>
 		);
 	} else {

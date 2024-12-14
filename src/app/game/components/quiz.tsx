@@ -20,7 +20,7 @@ export const Quiz = ({ quiz, onAnswer }: Props) => {
 	};
 
 	return (
-		<div className="flex h-full flex-col items-center justify-center">
+		<div className="flex h-full flex-col items-center justify-center gap-12">
 			<div className="inline-flex rounded-lg bg-yellow-200 p-3">
 				<MessageCircleQuestion className="mr-2 size-20" />
 				<p className="text-xl font-bold">{quiz.questions}</p>
