@@ -123,7 +123,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 					<p className="text-lg font-bold text-gray-800">{currentUser?.otoshidama ? currentUser?.otoshidama : 0}</p>
 				</div>
 
-				<div className="flex-1 overflow-auto">
+				<div className="flex-1 pt-16">
 					<Map
 						participatingUsers={participatingUsers}
 						playerPositions={participatingUsers.map((user) => user.position ?? 0)}
@@ -142,9 +142,9 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 					/>
 				</div>
 				<div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-center bg-transparent shadow-md">
-					<div className="w-full px-4">
+					<div className="flex w-full justify-end px-4">
 						{!isTaskActive && (
-							<Button className="w-full" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
+							<Button className="w-fit p-6 text-lg" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
 								{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
 							</Button>
 						)}
