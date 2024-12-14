@@ -1,0 +1,159 @@
+import { useAtom } from "jotai";
+import { useCallback, useEffect } from "react";
+
+import { QuizType } from "@/app/game/types/quiz";
+import { useTaskQueue } from "@/shared/hooks/use-task-queue";
+import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
+import { currentUserAtom, participatingUsersAtom, proccessingUserIdAtom } from "@/shared/store/user-id-atom";
+import {
+	handleOtoshidamaEvent,
+	handlePlayerMovementDisplay,
+	handlePlayerTurnStart,
+	handleQuizResult,
+	handleQuizStart,
+	handleRankingUpdate,
+	handleSugorokuMoveUpdate,
+} from "@/shared/tasks";
+
+type UseTaskProcessorProps = {
+	onPlayerTurnStart: () => void;
+	onPlayerMovementDisplay: () => void;
+	onPlayerFuridashitDisplay: () => void;
+	onQuizStart: () => void;
+	onOtoshidamaEvent: (otoshidama_amount: number) => void;
+	handleSetTurnUserID: (userID: string) => void;
+	handleSetIncreasedOtoshidama: (amount: number) => void;
+	handleSetMovementTarget: (target: number) => void;
+	handleSetQuiz: (quiz: QuizType) => void;
+};
+
+export const useTaskProcessor = ({
+	onPlayerTurnStart,
+	onPlayerMovementDisplay,
+	onPlayerFuridashitDisplay,
+	onQuizStart,
+	onOtoshidamaEvent,
+	handleSetTurnUserID,
+	handleSetIncreasedOtoshidama,
+	handleSetMovementTarget,
+	handleSetQuiz,
+}: UseTaskProcessorProps) => {
+	const { popTask } = useTaskQueue();
+	const [tasks] = useAtom(taskQueueAtom);
+	const [isTaskActive] = useAtom(isTaskActiveAtom);
+	const [, setIsTaskActive] = useAtom(isTaskActiveAtom);
+	const [, setProccessingUserId] = useAtom(proccessingUserIdAtom);
+	const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
+
+	// 同期を必要とする処理を行う
+	useEffect(() => {
+		if (tasks.length === 0) {
+			return;
+		}
+		const task = tasks[0];
+		const messageType = task.type.case;
+
+		switch (messageType) {
+			case "quizResult":
+				handleQuizResult(task.type.value);
+				break;
+			default:
+				break;
+		}
+	}, [tasks]);
+
+	// タスクを処理する
+	// delayを指定することで、処理までの待ち時間を設定できる
+	const processNextTask = useCallback(
+		(delay = 2000) => {
+			if (tasks.length === 0) {
+				console.log("No tasks to process");
+				return;
+			}
+			if (isTaskActive == null) {
+				console.log("Task processing is already active");
+				return;
+			}
+
+			const task = tasks[0];
+			const messageType = task.type.case;
+			console.group("Processing task:", messageType, task);
+
+			setIsTaskActive(true);
+
+			setTimeout(() => {
+				switch (messageType) {
+					case "playerTurnStart":
+						handlePlayerTurnStart({
+							data: task.type.value,
+							setProccessingUserId,
+						});
+						onPlayerTurnStart();
+						break;
+					case "sugorokuMoveUpdate":
+						handleSugorokuMoveUpdate(task.type.value);
+						break;
+					case "playerMovementDisplay":
+						handlePlayerMovementDisplay({
+							data: task.type.value,
+							setParticipatingUsers,
+							handleSetTurnUserID,
+							handleSetMovementTarget,
+							onPlayerMovementDisplay,
+							onPlayerFuridashitDisplay,
+						});
+						break;
+					case "quizStart":
+						handleQuizStart({
+							data: task.type.value,
+							handleSetQuiz,
+						});
+						onQuizStart();
+						break;
+					case "otoshidamaEvent":
+						handleOtoshidamaEvent({
+							handleSetIncreasedOtoshidama,
+							currentUserId: currentUser?.id,
+							setCurrentUser,
+							data: task.type.value,
+							setParticipatingUsers,
+						});
+						onOtoshidamaEvent(task.type.value.data!.otoshidamaAmount);
+						break;
+					case "rankingUpdate":
+						handleRankingUpdate(task.type.value);
+						break;
+					default:
+						console.warn("Unknown server message type received:", task);
+						break;
+				}
+
+				console.groupEnd();
+
+				popTask();
+			}, delay);
+		},
+		[
+			tasks,
+			isTaskActive,
+			popTask,
+			setIsTaskActive,
+			setParticipatingUsers,
+			onPlayerTurnStart,
+			onPlayerMovementDisplay,
+			onQuizStart,
+			onOtoshidamaEvent,
+			handleSetTurnUserID,
+			handleSetMovementTarget,
+			handleSetQuiz,
+			handleSetIncreasedOtoshidama,
+			onPlayerFuridashitDisplay,
+			setProccessingUserId,
+			setCurrentUser,
+			currentUser,
+		],
+	);
+
+	return { processNextTask };
+};

@@ -1,112 +1,167 @@
-import { create } from "@bufbuild/protobuf";
+import { redirect } from "@tanstack/react-router";
 import { useAtom } from "jotai/react";
-import { useState } from "react";
+import { Coins } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { ClientMessageSchema, GameStartRequestSchema } from "@/api/client-message_pb";
-import { DialogWrapper } from "@/shared/components/dialog-wrapper";
+import { ModalContainer } from "@/app/game/components/modals/modal-container";
+import { symbols } from "@/app/game/config/slot-symbols";
+import { useGameActions } from "@/app/game/hooks/use-game-actions";
+import { useTaskProcessor } from "@/shared/hooks/use-task-processor";
 import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
-import { messageStateAtom } from "@/shared/store/mesaage-state-atom";
-import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
+import { gameStateAtom } from "@/shared/store/message-state-atom";
+import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
+import { currentUserAtom, participatingUsersAtom, proccessingUserIdAtom } from "@/shared/store/user-id-atom";
 import { Button } from "@/shared/ui/button";
 
-import { QuizModel } from "../types/quiz";
+import { useModal } from "../hooks/use-modal";
+import { QuizType } from "../types/quiz";
 import { Map } from "./map";
-import { Quiz } from "./quiz";
-import { Slot } from "./slot";
+import { PlayerList } from "./player-list";
 
 export const GameBoard = ({ roomCode }: { roomCode: string }) => {
-	const { sendMessage } = useWebSocket();
-	const [messageState] = useAtom(messageStateAtom);
-	const [currentUser] = useAtom(currentUserAtom);
-	const [participatingUsers] = useAtom(participatingUsersAtom);
-
-	// @ts-expect-error setPlayerPositionは後で使う
-	const [playerPosition, setPlayerPosition] = useState(0);
-	const [showSlotModal, setShowSlotModal] = useState(false);
-	const [showQuizModal, setShowQuizModal] = useState(false);
-	const [target, setTarget] = useState(0);
-	const [quiz, setQuiz] = useState<QuizModel>({
+	const { modalState, openExclusiveModal, closeAllModals } = useModal();
+	const [target, setMovementTarget] = useState(0);
+	const [quiz, setQuiz] = useState<QuizType>({
 		questions: "",
 		options: [],
+		answer: "",
 	});
 
-	const symbols = ["これ", "あ", "3げあ", "4", "5", "6"];
+	const [increasedOtoshidama, setIncreasedOtoshidama] = useState(0);
 
-	const openSlotModal = () => {
-		setTarget(Math.floor(Math.random() * symbols.length));
-		setShowSlotModal(true);
+	const { processNextTask } = useTaskProcessor({
+		onPlayerTurnStart: () => {
+			openExclusiveModal("showWhoseTurnModal");
+		},
+		onPlayerMovementDisplay: () => {
+			openExclusiveModal("showSlotModal");
+		},
+		onPlayerFuridashitDisplay: () => {
+			openExclusiveModal("showFuridashiModal");
+		},
+		onQuizStart: () => {
+			openExclusiveModal("showQuizModal");
+		},
+		onOtoshidamaEvent: () => {
+			openExclusiveModal("showOtoshidamaModal");
+		},
+		handleSetTurnUserID: (userID: string) => {
+			setTurnUserID(userID);
+		},
+		handleSetMovementTarget: (target: number) => {
+			setMovementTarget(target);
+			console.log("target", target);
+		},
+		handleSetIncreasedOtoshidama: (amount: number) => {
+			setIncreasedOtoshidama(amount);
+		},
+		handleSetQuiz: (quiz: QuizType) => {
+			setQuiz(quiz);
+		},
+	});
+	const { sendMessage } = useWebSocket();
+	const [gameState] = useAtom(gameStateAtom);
+	const [currentUser] = useAtom(currentUserAtom);
+	const [proccessingUserId] = useAtom(proccessingUserIdAtom);
+	const [tasks] = useAtom(taskQueueAtom);
+	const [isTaskActive, setIsTaskActive] = useAtom(isTaskActiveAtom);
+	const [participatingUsers] = useAtom(participatingUsersAtom);
+	const [turnUserID, setTurnUserID] = useState("");
+
+	useEffect(() => {
+		console.log("Updated currentUser:", currentUser);
+	}, [currentUser]);
+
+	const { startGame, onTurnEnd, onAnswerQuiz } = useGameActions({
+		sendMessage,
+		currentUserId: currentUser?.id ?? "",
+		roomCode,
+	});
+
+	const handleCloseModal = () => {
+		closeAllModals();
+		setIsTaskActive(false);
 	};
 
-	const openQuizModal = () => {
-		setQuiz({
-			questions: "パリの首都はどこ？",
-			options: ["パリ", "ロンドン", "東京"],
+	if (!currentUser) {
+		// toast
+		redirect({
+			to: "/",
+			search: {},
 		});
+	}
 
-		setShowQuizModal(true);
-	};
+	useEffect(() => {
+		if (gameState == "GAME_START" && !isTaskActive && tasks.length > 0) {
+			processNextTask(2000);
+		}
+	}, [processNextTask, tasks, gameState, isTaskActive]);
 
-	const startGame = () => {
-		const clientMessage = create(ClientMessageSchema, {
-			$typeName: "ClientMessage",
-			type: {
-				value: create(GameStartRequestSchema, {
-					data: {
-						playerId: currentUser?.id ?? "",
-						roomCode,
-					},
-				}),
-				case: "gameStartRequest",
-			},
-		});
-		sendMessage(clientMessage);
-	};
-
-	if (messageState != null) {
-		if (messageState == "RoomJoinResponse") {
-			return (
-				<>
-					<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={startGame}>
-						Start Game
-					</Button>
-
-					{participatingUsers.map((user) =>
-						user.id == currentUser?.id ? (
-							<div key={user.id}>{user.nickname} (You)</div>
-						) : (
-							<div key={user.id}>{user.nickname}</div>
-						),
-					)}
-				</>
-			);
-		} else if (messageState == "GameEnd") {
-			return <div>Game fineshed</div>;
-		} else {
-			return (
-				<div>
-					<Map playerPosition={playerPosition} />
-
-					<div className="mt-8 flex flex-col items-center">
-						<div className="flex space-x-4">
-							<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={openSlotModal}>
-								Open Slot
-							</Button>
-							<Button className="rounded bg-green-500 px-4 py-2 text-white" onClick={openQuizModal}>
-								Open Quiz
-							</Button>
+	if (gameState === "ROOM_JOIN_RESPONSE") {
+		return (
+			<>
+				<div className="flex flex-col gap-4">
+					<div className="flex-1 overflow-auto">
+						<div className="flex items-center justify-between pb-4">
+							<h2 className="text-lg font-bold">ゲーム参加者</h2>
+							<h3 className="flex items-center justify-end text-lg font-bold">
+								<span className="inline-block rounded-md border border-gray-300 bg-gray-100 px-2 py-0.5 font-mono text-gray-800">
+									{roomCode}
+								</span>
+							</h3>
 						</div>
-						{messageState && <div>{messageState}</div>}
-						<DialogWrapper title="Slot Result" open={showSlotModal} onOpenChange={setShowSlotModal}>
-							<Slot target={target} symbols={symbols} />
-						</DialogWrapper>
-
-						<DialogWrapper title="Quiz" open={showQuizModal} onOpenChange={setShowQuizModal}>
-							<Quiz quiz={quiz} />
-						</DialogWrapper>
+						<PlayerList players={participatingUsers} currentUserId={currentUser?.id ?? ""} />
+					</div>
+					<div className="fixed bottom-8 left-0 w-full px-4">
+						<Button className="h-12 w-full" onClick={startGame}>
+							Start Game
+						</Button>
 					</div>
 				</div>
-			);
-		}
+			</>
+		);
+	} else if (gameState === "GAME_END") {
+		return <div>Game fineshed</div>;
+	} else if (gameState === "GAME_START") {
+		return (
+			<div className="flex h-full flex-col">
+				<div className=" fixed left-4 top-4 z-30 flex items-center rounded-lg bg-white p-2 shadow-md">
+					<Coins className="mr-2 size-6 text-yellow-500" />
+					<p className="text-lg font-bold text-gray-800">{currentUser?.otoshidama ? currentUser?.otoshidama : 0}円</p>
+				</div>
+
+				<div className="flex-1 pt-16">
+					<Map
+						participatingUsers={participatingUsers}
+						playerPositions={participatingUsers.map((user) => user.position ?? 0)}
+					/>
+				</div>
+				<div className="mt-8 flex flex-col items-center">
+					<ModalContainer
+						currentUser={currentUser!}
+						participatingUsers={participatingUsers}
+						proccessingUserId={proccessingUserId}
+						modalState={modalState}
+						onCloseModal={handleCloseModal}
+						onAnswerQuiz={onAnswerQuiz}
+						quiz={quiz}
+						target={target}
+						symbols={symbols}
+						increasedOtoshidama={increasedOtoshidama}
+					/>
+				</div>
+				<div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-center bg-transparent shadow-md">
+					<div className="flex w-full justify-end px-4">
+						{!isTaskActive && (
+							<Button className="w-fit p-6 text-lg" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
+								{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
+							</Button>
+						)}
+					</div>
+				</div>
+				<p className="fixed bottom-2 left-2 text-xs text-white">design by freepik</p>
+			</div>
+		);
 	} else {
 		return <div>Loading...</div>;
 	}

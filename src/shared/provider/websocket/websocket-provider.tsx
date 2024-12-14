@@ -10,9 +10,10 @@ import { WebSocketContext } from "./websocket-context";
 export interface WebSocketProviderProps {
 	roomCode: string;
 	children: ReactNode;
+	nickname: string;
 }
 
-export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps) => {
+export const WebSocketProvider = ({ roomCode, children, nickname }: WebSocketProviderProps) => {
 	const baseWsUrl = import.meta.env.VITE_WS_URL;
 	const ws = useRef<WebSocket | null>(null);
 
@@ -30,6 +31,7 @@ export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps
 
 	const sendMessage = useCallback((data: ClientMessage) => {
 		if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+			console.log("Sending message:", data);
 			const binary = toBinary(ClientMessageSchema, data);
 			ws.current.send(binary);
 		} else {
@@ -51,6 +53,7 @@ export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps
 						type: "ROOM_JOIN_REQUEST",
 						data: {
 							roomCode: roomCode,
+							nickname: nickname,
 						},
 					},
 				},
@@ -62,6 +65,7 @@ export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps
 		ws.current.onmessage = async (e) => {
 			const arrayBuffer = await e.data.arrayBuffer();
 			const data = fromBinary(ServerMessageSchema, new Uint8Array(arrayBuffer));
+
 			handleMessage(data);
 		};
 
@@ -72,14 +76,12 @@ export const WebSocketProvider = ({ roomCode, children }: WebSocketProviderProps
 		ws.current.onerror = (err) => {
 			console.error("WebSocket error:", err);
 		};
-	}, [baseWsUrl, handleMessage, roomCode, sendMessage]);
+	}, [baseWsUrl, handleMessage, roomCode, sendMessage, nickname]);
 
 	useEffect(() => {
 		connectWebSocket();
-		return () => {
-			disconnectWebSocket();
-		};
-	}, [disconnectWebSocket, connectWebSocket]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<WebSocketContext.Provider

@@ -1,21 +1,25 @@
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { FC } from "react";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 
 type Props = {
-	title: string;
 	children: React.ReactNode;
 	open: boolean;
-	onOpenChange: (open: boolean) => void;
+	className?: string;
 };
 
-export const DialogWrapper: FC<Props> = ({ title, children, open, onOpenChange }) => {
+export const DialogWrapper: FC<Props> = ({ children, open, className }) => {
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
-				<DialogHeader>
-					<DialogTitle>{title}</DialogTitle>
-				</DialogHeader>
+		<Dialog open={open}>
+			<DialogContent
+				className={className}
+				onInteractOutside={(e) => e.preventDefault()}
+				onEscapeKeyDown={(e) => e.preventDefault()}
+			>
+				<VisuallyHidden>
+					<DialogTitle></DialogTitle>
+				</VisuallyHidden>
 				{children}
 			</DialogContent>
 		</Dialog>

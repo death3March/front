@@ -1,5 +1,7 @@
+import confetti from "canvas-confetti";
 import clsx from "clsx";
 import { motion } from "motion/react";
+import { useCallback, useEffect } from "react";
 
 import { Button } from "@/shared/ui/button";
 
@@ -9,9 +11,12 @@ interface SlotProps {
 	target: number;
 	itemHeight?: number;
 	symbols: string[];
+	onSlotEnd: () => void;
 }
 
-export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
+const colors = ["#ed0404", "#ff6200", "#eca184", "#f8deb1"];
+
+export const Slot = ({ target, itemHeight = 100, symbols, onSlotEnd }: SlotProps) => {
 	// 見えるスロットの縦の数
 	const visibleCount = 3;
 	// stopが押されてから余分に回す数
@@ -21,6 +26,31 @@ export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
 	// 表示するシンボルの総高さ
 	const totalHeight = displaySymbols.length * itemHeight;
 
+	const end = Date.now() + 1 * 1000; // 3 seconds
+	// アニメーションの色
+	const frame = useCallback(() => {
+		if (Date.now() > end) return;
+
+		confetti({
+			particleCount: 2,
+			angle: 60,
+			spread: 55,
+			startVelocity: 60,
+			origin: { x: 0, y: 0.5 },
+			colors: colors,
+		});
+		confetti({
+			particleCount: 2,
+			angle: 120,
+			spread: 55,
+			startVelocity: 60,
+			origin: { x: 1, y: 0.5 },
+			colors: colors,
+		});
+
+		requestAnimationFrame(frame);
+	}, [end]);
+
 	const { controls, phase, stop } = useSlotAnimation({
 		target,
 		itemHeight,
@@ -29,10 +59,17 @@ export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
 		extraCycles,
 	});
 
+	useEffect(() => {
+		if (phase === "completed") {
+			frame();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [phase]);
+
 	return (
-		<div className="flex flex-col items-center">
+		<div className="flex h-full flex-col items-center justify-center">
 			<div
-				className="relative overflow-hidden rounded-md border-4"
+				className="relative overflow-hidden rounded-md border-4 border-primary"
 				style={{
 					height: itemHeight * visibleCount,
 					width: "250px",
@@ -55,14 +92,11 @@ export const Slot = ({ target, itemHeight = 100, symbols }: SlotProps) => {
 				</motion.div>
 			</div>
 			<Button
-				onClick={stop}
-				className={clsx("mt-2 rounded bg-none px-4 py-2", {
-					"bg-blue-500 text-white hover:bg-blue-500/90": phase === "running",
-					"bg-gray-300 text-gray-600 hover:bg-gray-300/90": phase !== "running",
-				})}
-				disabled={phase !== "running"}
+				onClick={phase === "running" ? stop : onSlotEnd}
+				disabled={phase === "slowing" || phase === "final"}
+				className={clsx("mt-12 aspect-square size-24 rounded-full bg-none")}
 			>
-				Stop
+				{phase === "running" ? "ストップ" : "閉じる"}
 			</Button>
 		</div>
 	);

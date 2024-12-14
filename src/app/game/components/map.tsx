@@ -3,15 +3,17 @@ import { useAtom } from "jotai/react";
 import { useMemo } from "react";
 
 import { mapSequenceAtom } from "@/shared/store/map-atom";
+import { UserType } from "@/shared/types/user-type";
 
 import { MapCells } from "../config/map-cells";
 import { MapCell } from "./map-cell";
 
 interface MapProps {
-	playerPosition: number;
+	playerPositions: number[];
+	participatingUsers: UserType[];
 }
 
-export const Map = ({ playerPosition }: MapProps) => {
+export const Map = ({ playerPositions, participatingUsers }: MapProps) => {
 	const [mapSequence] = useAtom(mapSequenceAtom);
 
 	const orderedCells = useMemo(() => {
@@ -28,8 +30,8 @@ export const Map = ({ playerPosition }: MapProps) => {
 
 				const isStart = index === isStartIndex;
 				const isGoal = index === lastIndex;
-				const isActive = index === playerPosition;
-
+				const isActive = playerPositions.includes(index);
+				const users = participatingUsers.filter((user) => user.position === index);
 				return (
 					<MapCell
 						key={`${cell.id}-${index}`}
@@ -38,6 +40,7 @@ export const Map = ({ playerPosition }: MapProps) => {
 						isStart={isStart}
 						isGoal={isGoal}
 						isActive={isActive}
+						users={users}
 					/>
 				);
 			})}

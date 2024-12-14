@@ -3,7 +3,10 @@ import clsx from "clsx";
 import { Flag, Gift, HelpCircle, Trophy } from "lucide-react";
 import { ReactNode } from "react";
 
+import { UserType } from "@/shared/types/user-type";
+
 import { MapCell as CellType } from "../types/map";
+import { UserAvatar } from "./user-avatar";
 
 interface MapCellProps {
 	label: string | null;
@@ -11,9 +14,10 @@ interface MapCellProps {
 	isStart: boolean;
 	isGoal: boolean;
 	isActive: boolean;
+	users: UserType[];
 }
 
-export const MapCell = ({ label, type, isStart, isGoal, isActive }: MapCellProps) => {
+export const MapCell = ({ label, type, isStart, isGoal, isActive, users }: MapCellProps) => {
 	let content: ReactNode = label;
 
 	if (isStart) {
@@ -67,7 +71,7 @@ export const MapCell = ({ label, type, isStart, isGoal, isActive }: MapCellProps
 	return (
 		<div
 			className={clsx(
-				"relative grid place-items-center rounded-md border border-gray-300 p-4 transition-transform duration-300",
+				"group relative grid place-items-center rounded-md border border-gray-300 bg-white p-4 transition-transform duration-300",
 				{
 					"bg-yellow-100": isActive,
 					"bg-green-100 border-green-500 rounded-full": isStart,
@@ -75,7 +79,14 @@ export const MapCell = ({ label, type, isStart, isGoal, isActive }: MapCellProps
 				},
 			)}
 		>
-			<div className="absolute -bottom-4 left-1/2 h-4 w-0.5 bg-gray-300 group-last:hidden" />
+			{users.length > 0 && (
+				<div className="absolute -top-4 left-4 flex">
+					{users?.map((user, index) => (
+						<UserAvatar key={index} user={user!} />
+					))}
+				</div>
+			)}
+			<div className="absolute -bottom-4 left-1/2 h-4 w-0.5 bg-primary group-last:hidden" />
 			{content}
 		</div>
 	);

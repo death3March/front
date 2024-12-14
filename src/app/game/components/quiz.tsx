@@ -1,18 +1,41 @@
+import { MessageCircleQuestion } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/shared/ui/button";
 
-import { QuizModel } from "../types/quiz";
+import { QuizType } from "../types/quiz";
 
 type Props = {
-	quiz: QuizModel;
+	title?: string;
+	quiz: QuizType;
+	onAnswer: (answer: string) => void;
 };
 
-export const Quiz = ({ quiz }: Props) => {
+export const Quiz = ({ quiz, onAnswer }: Props) => {
+	const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+	const handleAnswer = (answer: string) => {
+		setSelectedOption(answer);
+		onAnswer(answer);
+	};
+
 	return (
-		<div className="flex flex-col gap-8">
-			<p>{quiz.questions}</p>
-			<div className="grid grid-cols-2 gap-2">
+		<div className="flex h-full flex-col items-center justify-center gap-12">
+			<div className="inline-flex rounded-lg bg-yellow-200 p-3">
+				<MessageCircleQuestion className="mr-2 size-20" />
+				<p className="text-xl font-bold">{quiz.questions}</p>
+			</div>
+
+			<div className="my-4 w-full space-y-2">
 				{quiz.options.map((option) => (
-					<Button key={option}>{option}</Button>
+					<Button
+						className="w-full"
+						onClick={() => handleAnswer(option)}
+						disabled={selectedOption !== null}
+						key={option}
+					>
+						{option}
+					</Button>
 				))}
 			</div>
 		</div>
