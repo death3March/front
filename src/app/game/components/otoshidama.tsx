@@ -1,3 +1,5 @@
+import { Coins } from "lucide-react";
+
 import { Button } from "@/shared/ui/button";
 
 type OtoshidamaProps = {
@@ -15,13 +17,13 @@ export const Otoshidama = ({ increasedOtoshidama, onOtoshidamaEnd }: OtoshidamaP
 			<p className="text-2xl font-bold">お年玉を獲得しました！</p>
 			<img src="/otoshidama.png" alt="お年玉" className="mx-auto w-1/2" />
 
-			<div className="flex flex-col items-center">
-				<span>獲得した額</span>
-				<span>{increasedOtoshidama}</span>
+			<div className="flex items-center">
+				<Coins className="size-6 text-yellow-500" />
+				<span>{increasedOtoshidama}円を獲得しました！</span>
 			</div>
 
 			<Button className="mx-auto" onClick={onClose}>
-				Close
+				閉じる
 			</Button>
 		</div>
 	);
