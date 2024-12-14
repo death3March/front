@@ -1,4 +1,15 @@
 # HackUKosen2024
+## インストール
+```
+pnpm install
+pnpm run dev
+```
+
+また、`.env`を作成し、サーバー側のWS URLを入力する
+```
+VITE_WS_URL = ws://127.0.0.1:8080
+```
+
 ## 開発ツール類
 
 - eslint (linter)
