@@ -11,5 +11,6 @@ export const handleQuizStart = ({ data, handleSetQuiz }: Props) => {
 	handleSetQuiz({
 		questions: data.data?.quizQuestion ?? "",
 		options: data.data?.options ?? [],
+		answer: data.data?.answer ?? "",
 	});
 };

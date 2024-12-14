@@ -24,7 +24,9 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const [quiz, setQuiz] = useState<QuizType>({
 		questions: "",
 		options: [],
+		answer: "",
 	});
+
 	const [increasedOtoshidama, setIncreasedOtoshidama] = useState(0);
 
 	const { processNextTask } = useTaskProcessor({
@@ -65,6 +67,10 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const [isTaskActive, setIsTaskActive] = useAtom(isTaskActiveAtom);
 	const [participatingUsers] = useAtom(participatingUsersAtom);
 	const [turnUserID, setTurnUserID] = useState("");
+
+	useEffect(() => {
+		console.log("Updated currentUser:", currentUser);
+	}, [currentUser]);
 
 	const { startGame, onTurnEnd, onAnswerQuiz } = useGameActions({
 		sendMessage,
