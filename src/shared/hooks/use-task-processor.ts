@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 import { QuizType } from "@/app/game/types/quiz";
 import { useTaskQueue } from "@/shared/hooks/use-task-queue";
@@ -45,6 +45,23 @@ export const useTaskProcessor = ({
 	const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
 
+	// 同期を必要とする処理を行う
+	useEffect(() => {
+		if (tasks.length === 0) {
+			return;
+		}
+		const task = tasks[0];
+		const messageType = task.type.case;
+
+		switch (messageType) {
+			case "quizResult":
+				handleQuizResult(task.type.value);
+				break;
+			default:
+				break;
+		}
+	}, [tasks]);
+
 	// タスクを処理する
 	// delayを指定することで、処理までの待ち時間を設定できる
 	const processNextTask = useCallback(
@@ -89,9 +106,6 @@ export const useTaskProcessor = ({
 							handleSetQuiz,
 						});
 						onQuizStart();
-						break;
-					case "quizResult":
-						handleQuizResult(task.type.value);
 						break;
 					case "otoshidamaEvent":
 						handleOtoshidamaEvent({
