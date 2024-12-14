@@ -20,20 +20,23 @@ export const Quiz = ({ quiz, onAnswer }: Props) => {
 	};
 
 	return (
-		<div className="flex flex-col">
-			<div className="">
-				<div className="inline-flex rounded-lg bg-yellow-200 p-3">
-					<MessageCircleQuestion className="mr-2 size-20" />
-					<p className="text-xl font-bold">{quiz.questions}</p>
-				</div>
+		<div className="flex h-full flex-col items-center justify-center">
+			<div className="inline-flex rounded-lg bg-yellow-200 p-3">
+				<MessageCircleQuestion className="mr-2 size-20" />
+				<p className="text-xl font-bold">{quiz.questions}</p>
+			</div>
 
-				<div className="my-14 space-y-3">
-					{quiz.options.map((option) => (
-						<Button onClick={() => handleAnswer(option)} disabled={selectedOption !== null} key={option}>
-							<span className="w-full py-2 text-start text-lg font-semibold">{option}</span>
-						</Button>
-					))}
-				</div>
+			<div className="my-4 grid w-full grid-cols-2 gap-4">
+				{quiz.options.map((option) => (
+					<Button
+						className="w-full"
+						onClick={() => handleAnswer(option)}
+						disabled={selectedOption !== null}
+						key={option}
+					>
+						{option}
+					</Button>
+				))}
 			</div>
 		</div>
 	);

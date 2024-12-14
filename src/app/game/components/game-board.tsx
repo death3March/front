@@ -143,9 +143,11 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				</div>
 				<div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-center bg-transparent shadow-md">
 					<div className="w-full px-4">
-						<Button className="w-full" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
-							{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
-						</Button>
+						{!isTaskActive && (
+							<Button className="w-full" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
+								{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
+							</Button>
+						)}
 					</div>
 				</div>
 			</div>
