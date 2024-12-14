@@ -19,6 +19,8 @@ type ModalContainerProps = {
 	quiz: QuizType;
 	onCloseModal: () => void;
 	onAnswerQuiz: (answer: string) => void;
+	isShowQuizeAnser: boolean;
+	setShowQuizeAnswer: (isShow: boolean) => void;
 };
 
 export const ModalContainer = ({
@@ -32,6 +34,8 @@ export const ModalContainer = ({
 	quiz,
 	onCloseModal,
 	onAnswerQuiz,
+	isShowQuizeAnser,
+	setShowQuizeAnswer,
 }: ModalContainerProps) => {
 	const isSameUser = proccessingUserId === currentUser.id;
 	const processingUser = participatingUsers.find((user) => user.id === proccessingUserId);
@@ -56,7 +60,13 @@ export const ModalContainer = ({
 			</DialogWrapper>
 
 			<DialogWrapper className="h-screen" open={modalState.showQuizModal}>
-				<Quiz quiz={quiz} onAnswer={onAnswerQuiz} />
+				<Quiz
+					quiz={quiz}
+					onAnswer={onAnswerQuiz}
+					isShowQuizeAnser={isShowQuizeAnser}
+					onCloseModal={onCloseModal}
+					setShowQuizeAnswer={setShowQuizeAnswer}
+				/>
 			</DialogWrapper>
 
 			<DialogWrapper className="h-screen" open={modalState.showOtoshidamaModal}>
