@@ -32,13 +32,17 @@ export const ModalContainer = ({
 	return (
 		<>
 			<DialogWrapper open={modalState.showWhoseTurnModal}>
-				{`${currentUser.nickname}のターンです`}
-				<Button onClick={onCloseModal}>OK</Button>
+				<div className="flex flex-col items-center justify-center gap-4">
+					<p className="text-center text-lg font-bold text-gray-800">{`${currentUser.nickname}のターンです`}</p>
+					<Button onClick={onCloseModal}>OK</Button>
+				</div>
 			</DialogWrapper>
 
 			<DialogWrapper open={modalState.showFuridashiModal}>
-				振り出しに戻りました...
-				<Button onClick={onCloseModal}>OK</Button>
+				<div className="flex flex-col items-center justify-center gap-4">
+					<p className="text-center text-lg font-bold text-gray-800">振り出しに戻りました...</p>
+					<Button onClick={onCloseModal}>OK</Button>
+				</div>
 			</DialogWrapper>
 
 			<DialogWrapper className="h-screen" open={modalState.showSlotModal}>
