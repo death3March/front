@@ -3,7 +3,6 @@ import { useCallback, useEffect } from "react";
 
 import { QuizType } from "@/app/game/types/quiz";
 import { useTaskQueue } from "@/shared/hooks/use-task-queue";
-import { showQuizeAnswerAtom } from "@/shared/store/quize-state-atom";
 import { isTaskActiveAtom, taskProccessingUserIdAtom, taskQueueAtom } from "@/shared/store/task-atom";
 import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
 import {
@@ -45,7 +44,6 @@ export const useTaskProcessor = ({
 	const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
 	const [, setTaskProccessingUserId] = useAtom(taskProccessingUserIdAtom);
-	const [, setShowQuizeAnswer] = useAtom(showQuizeAnswerAtom);
 
 	// 同期を必要とする処理を行う
 	useEffect(() => {
@@ -56,6 +54,7 @@ export const useTaskProcessor = ({
 		const messageType = task.type.case;
 
 		switch (messageType) {
+			// 本来はクイズで正解しました！みたいなUIを表示したい
 			case "quizResult":
 				handleQuizResult({
 					data: task.type.value,
@@ -65,7 +64,7 @@ export const useTaskProcessor = ({
 					handleQuizAnswer: handleQuizAnswer,
 					setCurrentUser,
 				});
-				setShowQuizeAnswer(true);
+				popTask();
 				break;
 			default:
 				break;
@@ -73,10 +72,10 @@ export const useTaskProcessor = ({
 	}, [
 		tasks,
 		currentUser,
+		popTask,
 		setParticipatingUsers,
 		handleSetIncreasedOtoshidama,
 		setCurrentUser,
-		setShowQuizeAnswer,
 		handleQuizAnswer,
 	]);
 
