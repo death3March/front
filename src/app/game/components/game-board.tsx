@@ -124,7 +124,10 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				</div>
 
 				<div className="flex-1 overflow-auto">
-					<Map playerPositions={participatingUsers.map((user) => user.position ?? 0)} />
+					<Map
+						participatingUsers={participatingUsers}
+						playerPositions={participatingUsers.map((user) => user.position ?? 0)}
+					/>
 				</div>
 				<div className="mt-8 flex flex-col items-center">
 					<ModalContainer
@@ -138,13 +141,9 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 						increasedOtoshidama={increasedOtoshidama}
 					/>
 				</div>
-				<div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-center bg-white shadow-md">
+				<div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-center bg-transparent shadow-md">
 					<div className="w-full px-4">
-						<Button
-							className="w-full rounded-lg bg-gray-800 font-semibold text-white transition hover:bg-gray-600"
-							onClick={onTurnEnd}
-							disabled={turnUserID != currentUser!.id}
-						>
+						<Button className="w-full" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
 							{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
 						</Button>
 					</div>
