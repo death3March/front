@@ -1,7 +1,8 @@
 import "./index.css";
+import "jotai-devtools/styles.css";
 
 import { RouterProvider } from "@tanstack/react-router";
-import { Provider as JotaiProvider } from "jotai";
+import { DevTools } from "jotai-devtools";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { scan } from "react-scan";
@@ -16,8 +17,7 @@ if (import.meta.env.DEV) {
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<JotaiProvider>
-			<RouterProvider router={router} />
-		</JotaiProvider>
+		<DevTools />
+		<RouterProvider router={router} />
 	</StrictMode>,
 );

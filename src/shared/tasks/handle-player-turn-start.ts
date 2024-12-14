@@ -5,10 +5,10 @@ import { UserType } from "@/shared/types/user-type";
 
 type Props = {
 	data: PlayerTurnStart;
-	setProccessingUserId: (update: SetStateAction<UserType["id"] | null>) => void;
+	setTaskProccessingUserId: (update: SetStateAction<UserType["id"] | null>) => void;
 };
 
-export const handlePlayerTurnStart = ({ data, setProccessingUserId }: Props) => {
+export const handlePlayerTurnStart = ({ data, setTaskProccessingUserId }: Props) => {
 	console.log("Player turn start:", data.data);
-	setProccessingUserId(data.data?.playerId ?? null);
+	setTaskProccessingUserId(data.data?.playerId ?? null);
 };

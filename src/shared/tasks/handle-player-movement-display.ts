@@ -6,7 +6,6 @@ import { UserType } from "@/shared/types/user-type";
 type Props = {
 	data: PlayerMovementDisplay;
 	setParticipatingUsers: (update: SetStateAction<UserType[]>) => void;
-	handleSetTurnUserID: (userID: string) => void;
 	handleSetMovementTarget: (target: number) => void;
 	onPlayerMovementDisplay: () => void;
 	onPlayerFuridashitDisplay: () => void;
@@ -15,7 +14,6 @@ type Props = {
 export const handlePlayerMovementDisplay = ({
 	data,
 	setParticipatingUsers,
-	handleSetTurnUserID,
 	handleSetMovementTarget,
 	onPlayerMovementDisplay,
 	onPlayerFuridashitDisplay,
@@ -26,8 +24,6 @@ export const handlePlayerMovementDisplay = ({
 	console.log("playerMovementDisplay", playerId, newPosition);
 
 	if (playerId && newPosition !== undefined) {
-		handleSetTurnUserID(playerId);
-
 		setParticipatingUsers((prev) => {
 			const oldUser = prev.find((user) => user.id === playerId);
 			const oldPosition = oldUser?.position ?? 0;

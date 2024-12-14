@@ -9,8 +9,8 @@ import { useGameActions } from "@/app/game/hooks/use-game-actions";
 import { useTaskProcessor } from "@/shared/hooks/use-task-processor";
 import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
 import { gameStateAtom } from "@/shared/store/message-state-atom";
-import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
-import { currentUserAtom, participatingUsersAtom, proccessingUserIdAtom } from "@/shared/store/user-id-atom";
+import { isTaskActiveAtom, taskProccessingUserIdAtom, taskQueueAtom } from "@/shared/store/task-atom";
+import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
 import { Button } from "@/shared/ui/button";
 
 import { useModal } from "../hooks/use-modal";
@@ -26,6 +26,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 		options: [],
 		answer: "",
 	});
+	const [isShowQUizeAnser, setShowQuizeAnswer] = useState(false);
 
 	const [increasedOtoshidama, setIncreasedOtoshidama] = useState(0);
 
@@ -45,15 +46,15 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 		onOtoshidamaEvent: () => {
 			openExclusiveModal("showOtoshidamaModal");
 		},
-		handleSetTurnUserID: (userID: string) => {
-			setTurnUserID(userID);
-		},
 		handleSetMovementTarget: (target: number) => {
 			setMovementTarget(target);
 			console.log("target", target);
 		},
 		handleSetIncreasedOtoshidama: (amount: number) => {
 			setIncreasedOtoshidama(amount);
+		},
+		handleQuizAnswer: () => {
+			setShowQuizeAnswer(true);
 		},
 		handleSetQuiz: (quiz: QuizType) => {
 			setQuiz(quiz);
@@ -62,11 +63,10 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const { sendMessage } = useWebSocket();
 	const [gameState] = useAtom(gameStateAtom);
 	const [currentUser] = useAtom(currentUserAtom);
-	const [proccessingUserId] = useAtom(proccessingUserIdAtom);
 	const [tasks] = useAtom(taskQueueAtom);
 	const [isTaskActive, setIsTaskActive] = useAtom(isTaskActiveAtom);
 	const [participatingUsers] = useAtom(participatingUsersAtom);
-	const [turnUserID, setTurnUserID] = useState("");
+	const [taskProccessingUserId] = useAtom(taskProccessingUserIdAtom);
 
 	useEffect(() => {
 		console.log("Updated currentUser:", currentUser);
@@ -90,6 +90,10 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 			search: {},
 		});
 	}
+
+	useEffect(() => {
+		console.log("Updated proccessingUserId:", taskProccessingUserId);
+	}, [taskProccessingUserId]);
 
 	useEffect(() => {
 		if (gameState == "GAME_START" && !isTaskActive && tasks.length > 0) {
@@ -138,9 +142,11 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				</div>
 				<div className="mt-8 flex flex-col items-center">
 					<ModalContainer
+						isShowQuizeAnser={isShowQUizeAnser}
+						setShowQuizeAnswer={setShowQuizeAnswer}
 						currentUser={currentUser!}
 						participatingUsers={participatingUsers}
-						proccessingUserId={proccessingUserId}
+						proccessingUserId={taskProccessingUserId}
 						modalState={modalState}
 						onCloseModal={handleCloseModal}
 						onAnswerQuiz={onAnswerQuiz}
@@ -153,8 +159,12 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				<div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-center bg-transparent shadow-md">
 					<div className="flex w-full justify-end px-4">
 						{!isTaskActive && (
-							<Button className="w-fit p-6 text-lg" onClick={onTurnEnd} disabled={turnUserID != currentUser!.id}>
-								{turnUserID != currentUser!.id ? "待機中" : "ターン終了"}
+							<Button
+								className="w-fit p-6 text-lg"
+								onClick={onTurnEnd}
+								disabled={taskProccessingUserId != currentUser!.id}
+							>
+								{taskProccessingUserId != currentUser!.id ? "待機中" : "ターン終了"}
 							</Button>
 						)}
 					</div>

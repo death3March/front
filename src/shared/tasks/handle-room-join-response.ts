@@ -6,11 +6,11 @@ import { UserType } from "@/shared/types/user-type";
 type Props = {
 	data: RoomJoinResponse;
 	currentUser: UserType | null;
-	setUserId: (value: UserType) => void;
+	setCurrentUser: (user: UserType) => void;
 	setParticipatingUsers: (update: SetStateAction<UserType[]>) => void;
 };
 
-export const handleRoomJoinResponse = ({ data, currentUser, setUserId, setParticipatingUsers }: Props) => {
+export const handleRoomJoinResponse = ({ data, currentUser, setCurrentUser, setParticipatingUsers }: Props) => {
 	console.log("Room join response:", data.data);
 	console.log("current User", currentUser);
 
@@ -18,8 +18,7 @@ export const handleRoomJoinResponse = ({ data, currentUser, setUserId, setPartic
 	const nickname = data.data?.nickname;
 	if (playerId && nickname) {
 		if (currentUser === null) {
-			console.log("Setting user ID:", playerId);
-			setUserId({ id: playerId, nickname });
+			setCurrentUser({ id: playerId, nickname });
 		}
 		setParticipatingUsers((prev: UserType[]) => {
 			if (prev.some((user: UserType) => user.id === playerId)) {

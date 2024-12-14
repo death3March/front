@@ -3,8 +3,8 @@ import { useCallback, useEffect } from "react";
 
 import { QuizType } from "@/app/game/types/quiz";
 import { useTaskQueue } from "@/shared/hooks/use-task-queue";
-import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
-import { currentUserAtom, participatingUsersAtom, proccessingUserIdAtom } from "@/shared/store/user-id-atom";
+import { isTaskActiveAtom, taskProccessingUserIdAtom, taskQueueAtom } from "@/shared/store/task-atom";
+import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
 import {
 	handleOtoshidamaEvent,
 	handlePlayerMovementDisplay,
@@ -21,10 +21,10 @@ type UseTaskProcessorProps = {
 	onPlayerFuridashitDisplay: () => void;
 	onQuizStart: () => void;
 	onOtoshidamaEvent: (otoshidama_amount: number) => void;
-	handleSetTurnUserID: (userID: string) => void;
 	handleSetIncreasedOtoshidama: (amount: number) => void;
 	handleSetMovementTarget: (target: number) => void;
 	handleSetQuiz: (quiz: QuizType) => void;
+	handleQuizAnswer: () => void;
 };
 
 export const useTaskProcessor = ({
@@ -33,18 +33,17 @@ export const useTaskProcessor = ({
 	onPlayerFuridashitDisplay,
 	onQuizStart,
 	onOtoshidamaEvent,
-	handleSetTurnUserID,
 	handleSetIncreasedOtoshidama,
 	handleSetMovementTarget,
 	handleSetQuiz,
+	handleQuizAnswer,
 }: UseTaskProcessorProps) => {
 	const { popTask } = useTaskQueue();
 	const [tasks] = useAtom(taskQueueAtom);
-	const [isTaskActive] = useAtom(isTaskActiveAtom);
-	const [, setIsTaskActive] = useAtom(isTaskActiveAtom);
-	const [, setProccessingUserId] = useAtom(proccessingUserIdAtom);
+	const [isTaskActive, setIsTaskActive] = useAtom(isTaskActiveAtom);
 	const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
+	const [, setTaskProccessingUserId] = useAtom(taskProccessingUserIdAtom);
 
 	// 同期を必要とする処理を行う
 	useEffect(() => {
@@ -55,13 +54,30 @@ export const useTaskProcessor = ({
 		const messageType = task.type.case;
 
 		switch (messageType) {
+			// 本来はクイズで正解しました！みたいなUIを表示したい
 			case "quizResult":
-				handleQuizResult(task.type.value);
+				handleQuizResult({
+					data: task.type.value,
+					setParticipatingUsers,
+					handleSetIncreasedOtoshidama,
+					currentUserId: currentUser?.id,
+					handleQuizAnswer: handleQuizAnswer,
+					setCurrentUser,
+				});
+				popTask();
 				break;
 			default:
 				break;
 		}
-	}, [tasks]);
+	}, [
+		tasks,
+		currentUser,
+		popTask,
+		setParticipatingUsers,
+		handleSetIncreasedOtoshidama,
+		setCurrentUser,
+		handleQuizAnswer,
+	]);
 
 	// タスクを処理する
 	// delayを指定することで、処理までの待ち時間を設定できる
@@ -87,7 +103,7 @@ export const useTaskProcessor = ({
 					case "playerTurnStart":
 						handlePlayerTurnStart({
 							data: task.type.value,
-							setProccessingUserId,
+							setTaskProccessingUserId,
 						});
 						onPlayerTurnStart();
 						break;
@@ -98,7 +114,6 @@ export const useTaskProcessor = ({
 						handlePlayerMovementDisplay({
 							data: task.type.value,
 							setParticipatingUsers,
-							handleSetTurnUserID,
 							handleSetMovementTarget,
 							onPlayerMovementDisplay,
 							onPlayerFuridashitDisplay,
@@ -144,12 +159,11 @@ export const useTaskProcessor = ({
 			onPlayerMovementDisplay,
 			onQuizStart,
 			onOtoshidamaEvent,
-			handleSetTurnUserID,
 			handleSetMovementTarget,
+			setTaskProccessingUserId,
 			handleSetQuiz,
 			handleSetIncreasedOtoshidama,
 			onPlayerFuridashitDisplay,
-			setProccessingUserId,
 			setCurrentUser,
 			currentUser,
 		],
