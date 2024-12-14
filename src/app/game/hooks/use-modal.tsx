@@ -1,25 +1,22 @@
 import { useCallback, useState } from "react";
 
-type ModalState = {
-	showWhoseTurnModal: boolean;
-	showSlotModal: boolean;
-	showQuizModal: boolean;
-	showOtoshidamaModal: boolean;
-};
+import { ModalStateType } from "@/app/game/types/modal";
 
 export const useModal = () => {
-	const [modalState, setModalState] = useState<ModalState>({
+	const [modalState, setModalState] = useState<ModalStateType>({
 		showWhoseTurnModal: false,
+		showFuridashiModal: false,
 		showSlotModal: false,
 		showQuizModal: false,
 		showOtoshidamaModal: false,
 	});
 
 	const openExclusiveModal = useCallback(
-		(modalKey: keyof ModalState) => {
+		(modalKey: keyof ModalStateType) => {
 			setModalState({
 				showWhoseTurnModal: false,
 				showSlotModal: false,
+				showFuridashiModal: false,
 				showQuizModal: false,
 				showOtoshidamaModal: false,
 			});
@@ -36,6 +33,7 @@ export const useModal = () => {
 		setModalState({
 			showWhoseTurnModal: false,
 			showSlotModal: false,
+			showFuridashiModal: false,
 			showQuizModal: false,
 			showOtoshidamaModal: false,
 		});

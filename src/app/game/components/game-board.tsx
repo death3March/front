@@ -34,6 +34,9 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 		onPlayerMovementDisplay: () => {
 			openExclusiveModal("showSlotModal");
 		},
+		onPlayerFuridashitDisplay: () => {
+			openExclusiveModal("showFuridashiModal");
+		},
 		onQuizStart: () => {
 			openExclusiveModal("showQuizModal");
 		},

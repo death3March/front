@@ -1,3 +1,4 @@
+import { ModalStateType } from "@/app/game/types/modal";
 import { DialogWrapper } from "@/shared/components/dialog-wrapper";
 import { UserType } from "@/shared/types/user-type";
 import { Button } from "@/shared/ui/button";
@@ -9,12 +10,7 @@ import { Slot } from "../slot";
 
 type ModalContainerProps = {
 	currentUser: UserType;
-	modalState: {
-		showWhoseTurnModal: boolean;
-		showSlotModal: boolean;
-		showQuizModal: boolean;
-		showOtoshidamaModal: boolean;
-	};
+	modalState: ModalStateType;
 	target: number;
 	symbols: string[];
 	increasedOtoshidama: number;
@@ -37,6 +33,11 @@ export const ModalContainer = ({
 		<>
 			<DialogWrapper open={modalState.showWhoseTurnModal}>
 				{`${currentUser.nickname}のターンです`}
+				<Button onClick={onCloseModal}>OK</Button>
+			</DialogWrapper>
+
+			<DialogWrapper open={modalState.showFuridashiModal}>
+				振り出しに戻りました...
 				<Button onClick={onCloseModal}>OK</Button>
 			</DialogWrapper>
 

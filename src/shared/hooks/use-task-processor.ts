@@ -18,6 +18,7 @@ import {
 type UseTaskProcessorProps = {
 	onPlayerTurnStart: () => void;
 	onPlayerMovementDisplay: () => void;
+	onPlayerFuridashitDisplay: () => void;
 	onQuizStart: () => void;
 	onOtoshidamaEvent: (otoshidama_amount: number) => void;
 	handleSetTurnUserID: (userID: string) => void;
@@ -29,6 +30,7 @@ type UseTaskProcessorProps = {
 export const useTaskProcessor = ({
 	onPlayerTurnStart,
 	onPlayerMovementDisplay,
+	onPlayerFuridashitDisplay,
 	onQuizStart,
 	onOtoshidamaEvent,
 	handleSetTurnUserID,
@@ -77,8 +79,9 @@ export const useTaskProcessor = ({
 							setParticipatingUsers,
 							handleSetTurnUserID,
 							handleSetMovementTarget,
+							onPlayerMovementDisplay,
+							onPlayerFuridashitDisplay,
 						});
-						onPlayerMovementDisplay();
 						break;
 					case "quizStart":
 						handleQuizStart({
@@ -127,6 +130,7 @@ export const useTaskProcessor = ({
 			handleSetMovementTarget,
 			handleSetQuiz,
 			handleSetIncreasedOtoshidama,
+			onPlayerFuridashitDisplay,
 			setCurrentUser,
 			currentUser,
 		],
