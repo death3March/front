@@ -12,8 +12,9 @@ export const Game = () => {
 
 	return (
 		<WebSocketProvider roomCode={roomCode} nickname={nickname}>
-			<Container className="h-full overflow-hidden">
+			<Container className="h-full min-h-screen overflow-hidden bg-map-cell bg-cover bg-center bg-repeat">
 				<GameBoard roomCode={roomCode} />
+				<p className="absolute bottom-2 right-2 text-xs text-white">design by freepik</p>
 			</Container>
 		</WebSocketProvider>
 	);

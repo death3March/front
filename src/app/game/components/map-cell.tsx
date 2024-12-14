@@ -71,7 +71,7 @@ export const MapCell = ({ label, type, isStart, isGoal, isActive, users }: MapCe
 	return (
 		<div
 			className={clsx(
-				"group relative grid place-items-center rounded-md border border-gray-300 p-4 transition-transform duration-300",
+				"group relative grid place-items-center rounded-md border border-gray-300 bg-white p-4 transition-transform duration-300",
 				{
 					"bg-yellow-100": isActive,
 					"bg-green-100 border-green-500 rounded-full": isStart,
@@ -86,7 +86,7 @@ export const MapCell = ({ label, type, isStart, isGoal, isActive, users }: MapCe
 					))}
 				</div>
 			)}
-			<div className="absolute -bottom-4 left-1/2 h-4 w-0.5 bg-gray-300 group-last:hidden" />
+			<div className="absolute -bottom-4 left-1/2 h-4 w-0.5 bg-primary group-last:hidden" />
 			{content}
 		</div>
 	);

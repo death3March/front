@@ -62,7 +62,7 @@ export const Slot = ({ target, itemHeight = 100, symbols, onSlotEnd }: SlotProps
 				})}
 				disabled={phase !== "running"}
 			>
-				Stop
+				ストップ！
 			</Button>
 
 			<Button

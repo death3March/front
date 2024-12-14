@@ -6,6 +6,9 @@ export default {
 	content: ["./src/**/*.{ts,tsx}"],
 	theme: {
 		extend: {
+			backgroundImage: {
+				"map-cell": "url('/new_years_card.jpg')",
+			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",

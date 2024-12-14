@@ -41,15 +41,15 @@ export const ModalContainer = ({
 				<Button onClick={onCloseModal}>OK</Button>
 			</DialogWrapper>
 
-			<DialogWrapper className="min-h-screen" open={modalState.showSlotModal}>
+			<DialogWrapper className="h-screen" open={modalState.showSlotModal}>
 				<Slot target={target} symbols={symbols} onSlotEnd={onCloseModal} />
 			</DialogWrapper>
 
-			<DialogWrapper className="min-h-screen" open={modalState.showQuizModal}>
+			<DialogWrapper className="h-screen" open={modalState.showQuizModal}>
 				<Quiz quiz={quiz} onAnswer={onAnswerQuiz} />
 			</DialogWrapper>
 
-			<DialogWrapper className="min-h-screen" open={modalState.showOtoshidamaModal}>
+			<DialogWrapper className="h-screen" open={modalState.showOtoshidamaModal}>
 				<Otoshidama increasedOtoshidama={increasedOtoshidama} onOtoshidamaEnd={onCloseModal} />
 			</DialogWrapper>
 		</>
