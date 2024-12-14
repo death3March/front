@@ -10,6 +10,8 @@ import { Slot } from "../slot";
 
 type ModalContainerProps = {
 	currentUser: UserType;
+	participatingUsers: UserType[];
+	proccessingUserId: UserType["id"] | null;
 	modalState: ModalStateType;
 	target: number;
 	symbols: string[];
@@ -21,6 +23,8 @@ type ModalContainerProps = {
 
 export const ModalContainer = ({
 	currentUser,
+	proccessingUserId,
+	participatingUsers,
 	modalState,
 	target,
 	symbols,
@@ -29,13 +33,15 @@ export const ModalContainer = ({
 	onCloseModal,
 	onAnswerQuiz,
 }: ModalContainerProps) => {
+	const isSameUser = proccessingUserId === currentUser.id;
+	const processingUser = participatingUsers.find((user) => user.id === proccessingUserId);
+
 	return (
 		<>
 			<DialogWrapper open={modalState.showWhoseTurnModal}>
-				<div className="flex flex-col items-center justify-center gap-4">
-					<p className="text-center text-lg font-bold text-gray-800">{`${currentUser.nickname}のターンです`}</p>
-					<Button onClick={onCloseModal}>OK</Button>
-				</div>
+				{`${isSameUser ? "あなた" : processingUser?.nickname || proccessingUserId}
+                のターンです`}
+				<Button onClick={onCloseModal}>OK</Button>
 			</DialogWrapper>
 
 			<DialogWrapper open={modalState.showFuridashiModal}>

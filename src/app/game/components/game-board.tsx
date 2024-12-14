@@ -10,7 +10,7 @@ import { useTaskProcessor } from "@/shared/hooks/use-task-processor";
 import { useWebSocket } from "@/shared/provider/websocket/use-websocket";
 import { gameStateAtom } from "@/shared/store/message-state-atom";
 import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
-import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
+import { currentUserAtom, participatingUsersAtom, proccessingUserIdAtom } from "@/shared/store/user-id-atom";
 import { Button } from "@/shared/ui/button";
 
 import { useModal } from "../hooks/use-modal";
@@ -60,6 +60,7 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 	const { sendMessage } = useWebSocket();
 	const [gameState] = useAtom(gameStateAtom);
 	const [currentUser] = useAtom(currentUserAtom);
+	const [proccessingUserId] = useAtom(proccessingUserIdAtom);
 	const [tasks] = useAtom(taskQueueAtom);
 	const [isTaskActive, setIsTaskActive] = useAtom(isTaskActiveAtom);
 	const [participatingUsers] = useAtom(participatingUsersAtom);
@@ -132,6 +133,8 @@ export const GameBoard = ({ roomCode }: { roomCode: string }) => {
 				<div className="mt-8 flex flex-col items-center">
 					<ModalContainer
 						currentUser={currentUser!}
+						participatingUsers={participatingUsers}
+						proccessingUserId={proccessingUserId}
 						modalState={modalState}
 						onCloseModal={handleCloseModal}
 						onAnswerQuiz={onAnswerQuiz}

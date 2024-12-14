@@ -4,7 +4,7 @@ import { useCallback, useEffect } from "react";
 import { QuizType } from "@/app/game/types/quiz";
 import { useTaskQueue } from "@/shared/hooks/use-task-queue";
 import { isTaskActiveAtom, taskQueueAtom } from "@/shared/store/task-atom";
-import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
+import { currentUserAtom, participatingUsersAtom, proccessingUserIdAtom } from "@/shared/store/user-id-atom";
 import {
 	handleOtoshidamaEvent,
 	handlePlayerMovementDisplay,
@@ -42,6 +42,7 @@ export const useTaskProcessor = ({
 	const [tasks] = useAtom(taskQueueAtom);
 	const [isTaskActive] = useAtom(isTaskActiveAtom);
 	const [, setIsTaskActive] = useAtom(isTaskActiveAtom);
+	const [, setProccessingUserId] = useAtom(proccessingUserIdAtom);
 	const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
 
@@ -84,7 +85,10 @@ export const useTaskProcessor = ({
 			setTimeout(() => {
 				switch (messageType) {
 					case "playerTurnStart":
-						handlePlayerTurnStart(task.type.value);
+						handlePlayerTurnStart({
+							data: task.type.value,
+							setProccessingUserId,
+						});
 						onPlayerTurnStart();
 						break;
 					case "sugorokuMoveUpdate":
@@ -145,6 +149,7 @@ export const useTaskProcessor = ({
 			handleSetQuiz,
 			handleSetIncreasedOtoshidama,
 			onPlayerFuridashitDisplay,
+			setProccessingUserId,
 			setCurrentUser,
 			currentUser,
 		],
