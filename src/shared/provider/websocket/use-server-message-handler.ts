@@ -7,10 +7,11 @@ import { mapSequenceAtom } from "@/shared/store/map-atom";
 import { gameStateAtom } from "@/shared/store/message-state-atom";
 import { currentUserAtom, participatingUsersAtom } from "@/shared/store/user-id-atom";
 import { handleGameEnd, handleGameStart, handleRoomJoinResponse } from "@/shared/tasks";
+import { handleMemberJoin } from "@/shared/tasks/handle-member-join";
 
 export const useServerMessageHandler = () => {
 	const { pushTask } = useTaskQueue();
-	const [currentUser, setUserId] = useAtom(currentUserAtom);
+	const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 	const [, setMapSequence] = useAtom(mapSequenceAtom);
 	const [, setParticipatingUsers] = useAtom(participatingUsersAtom);
 	const [, setGameState] = useAtom(gameStateAtom);
@@ -23,7 +24,14 @@ export const useServerMessageHandler = () => {
 					handleRoomJoinResponse({
 						data: task.type.value,
 						currentUser: currentUser,
-						setUserId: setUserId,
+						setCurrentUser: setCurrentUser,
+						setParticipatingUsers,
+					});
+					break;
+				case "roomMemberData":
+					console.log("roomMemberData", task.type.value);
+					handleMemberJoin({
+						data: task.type.value,
 						setParticipatingUsers,
 					});
 					break;
@@ -43,6 +51,6 @@ export const useServerMessageHandler = () => {
 					pushTask(task);
 			}
 		},
-		[pushTask, currentUser, setUserId, setMapSequence, setParticipatingUsers, setGameState],
+		[setGameState, currentUser, setCurrentUser, setParticipatingUsers, setMapSequence, pushTask],
 	);
 };

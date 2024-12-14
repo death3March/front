@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
 export const file_server_message: GenFile =
 	/*@__PURE__*/
 	fileDesc(
-		"ChRzZXJ2ZXItbWVzc2FnZS5wcm90byK3AwoNU2VydmVyTWVzc2FnZRIrCg9wbGF5ZXJUdXJuU3RhcnQYASABKAsyEC5QbGF5ZXJUdXJuU3RhcnRIABIxChJzdWdvcm9rdU1vdmVVcGRhdGUYAiABKAsyEy5TdWdvcm9rdU1vdmVVcGRhdGVIABI3ChVwbGF5ZXJNb3ZlbWVudERpc3BsYXkYAyABKAsyFi5QbGF5ZXJNb3ZlbWVudERpc3BsYXlIABIfCglxdWl6U3RhcnQYBCABKAsyCi5RdWl6U3RhcnRIABIhCgpxdWl6UmVzdWx0GAUgASgLMgsuUXVpelJlc3VsdEgAEisKD290b3NoaWRhbWFFdmVudBgGIAEoCzIQLk90b3NoaWRhbWFFdmVudEgAEicKDXJhbmtpbmdVcGRhdGUYByABKAsyDi5SYW5raW5nVXBkYXRlSAASHwoJZ2FtZVN0YXJ0GAggASgLMgouR2FtZVN0YXJ0SAASGwoHZ2FtZUVuZBgJIAEoCzIILkdhbWVFbmRIABItChByb29tSm9pblJlc3BvbnNlGAogASgLMhEuUm9vbUpvaW5SZXNwb25zZUgAQgYKBHR5cGUiXgoPUGxheWVyVHVyblN0YXJ0EgwKBHR5cGUYASABKAkSIwoEZGF0YRgCIAEoCzIVLlBsYXllclR1cm5TdGFydC5EYXRhGhgKBERhdGESEAoIcGxheWVySWQYASABKAkijQEKElN1Z29yb2t1TW92ZVVwZGF0ZRIMCgR0eXBlGAEgASgJEiYKBGRhdGEYAiABKAsyGC5TdWdvcm9rdU1vdmVVcGRhdGUuRGF0YRpBCgREYXRhEhAKCHBsYXllcklkGAEgASgJEhIKCnN0ZXBzTW92ZWQYAiABKAUSEwoLbmV3UG9zaXRpb24YAyABKAUifwoVUGxheWVyTW92ZW1lbnREaXNwbGF5EgwKBHR5cGUYASABKAkSKQoEZGF0YRgCIAEoCzIbLlBsYXllck1vdmVtZW50RGlzcGxheS5EYXRhGi0KBERhdGESEAoIcGxheWVySWQYASABKAkSEwoLbmV3UG9zaXRpb24YAiABKAUiiQEKCVF1aXpTdGFydBIMCgR0eXBlGAEgASgJEh0KBGRhdGEYAiABKAsyDy5RdWl6U3RhcnQuRGF0YRpPCgREYXRhEhAKCHBsYXllcklkGAEgASgJEhQKDHF1aXpRdWVzdGlvbhgCIAEoCRIPCgdvcHRpb25zGAMgAygJEg4KBmFuc3dlchgEIAEoCSKSAQoKUXVpelJlc3VsdBIMCgR0eXBlGAEgASgJEh4KBGRhdGEYAiABKAsyEC5RdWl6UmVzdWx0LkRhdGEaVgoERGF0YRIQCghQbGF5ZXJJZBgBIAEoCRIYChBvdG9zaGlkYW1hQW1vdW50GAIgASgFEg8KB21lc3NhZ2UYAyABKAkSEQoJaXNDb3JyZWN0GAQgASgIIokBCg9PdG9zaGlkYW1hRXZlbnQSDAoEdHlwZRgBIAEoCRIjCgRkYXRhGAIgASgLMhUuT3Rvc2hpZGFtYUV2ZW50LkRhdGEaQwoERGF0YRIQCghwbGF5ZXJJZBgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEhgKEG90b3NoaWRhbWFBbW91bnQYAyABKAUi8QEKCUdhbWVTdGFydBIMCgR0eXBlGAEgASgJEh0KBGRhdGEYAiABKAsyDy5HYW1lU3RhcnQuRGF0YRq2AQoERGF0YRIRCglwbGF5ZXJJZHMYASADKAkSIAoDbWFwGAIgASgLMhMuR2FtZVN0YXJ0LkRhdGEuTWFwGnkKA01hcBIvCgdzcXVhcmVzGAEgAygOMh4uR2FtZVN0YXJ0LkRhdGEuTWFwLnNxdWFyZVR5cGUiQQoKc3F1YXJlVHlwZRIKCgZOT1JNQUwQABIICgRRVUlaEAESDgoKT1RPU0hJREFNQRACEg0KCUZVUklEQVNISRADIqgBCgdHYW1lRW5kEgwKBHR5cGUYASABKAkSGwoEZGF0YRgCIAEoCzINLkdhbWVFbmQuRGF0YRpyCgREYXRhEjUKDHBsYXllclNjb3JlcxgBIAMoCzIfLkdhbWVFbmQuRGF0YS5QbGF5ZXJTY29yZXNFbnRyeRozChFQbGF5ZXJTY29yZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAU6AjgBIqYBCg1SYW5raW5nVXBkYXRlEgwKBHR5cGUYASABKAkSIQoEZGF0YRgCIAEoCzITLlJhbmtpbmdVcGRhdGUuRGF0YRpkCgREYXRhEi0KCHJhbmtpbmdzGAEgAygLMhsuUmFua2luZ1VwZGF0ZS5EYXRhLlJhbmtpbmcaLQoHUmFua2luZxIQCghwbGF5ZXJJZBgBIAEoCRIQCghwb3NpdGlvbhgCIAEoBSKEAQoQUm9vbUpvaW5SZXNwb25zZRIMCgR0eXBlGAEgASgJEiQKBGRhdGEYAiABKAsyFi5Sb29tSm9pblJlc3BvbnNlLkRhdGEaPAoERGF0YRIQCghwbGF5ZXJJZBgBIAEoCRIQCghuaWNrbmFtZRgCIAEoCRIQCghyb29tQ29kZRgDIAEoCWIGcHJvdG8z",
+		"ChRzZXJ2ZXItbWVzc2FnZS5wcm90byKdBAoNU2VydmVyTWVzc2FnZRIrCg9wbGF5ZXJUdXJuU3RhcnQYASABKAsyEC5QbGF5ZXJUdXJuU3RhcnRIABIxChJzdWdvcm9rdU1vdmVVcGRhdGUYAiABKAsyEy5TdWdvcm9rdU1vdmVVcGRhdGVIABI3ChVwbGF5ZXJNb3ZlbWVudERpc3BsYXkYAyABKAsyFi5QbGF5ZXJNb3ZlbWVudERpc3BsYXlIABIfCglxdWl6U3RhcnQYBCABKAsyCi5RdWl6U3RhcnRIABIhCgpxdWl6UmVzdWx0GAUgASgLMgsuUXVpelJlc3VsdEgAEisKD290b3NoaWRhbWFFdmVudBgGIAEoCzIQLk90b3NoaWRhbWFFdmVudEgAEicKDXJhbmtpbmdVcGRhdGUYByABKAsyDi5SYW5raW5nVXBkYXRlSAASHwoJZ2FtZVN0YXJ0GAggASgLMgouR2FtZVN0YXJ0SAASGwoHZ2FtZUVuZBgJIAEoCzIILkdhbWVFbmRIABItChByb29tSm9pblJlc3BvbnNlGAogASgLMhEuUm9vbUpvaW5SZXNwb25zZUgAEhgKDlJldHVyblBsYXllcklkGAsgASgJSAASHwoJcm9vbVN0YXRlGAwgASgLMgouUm9vbVN0YXRlSAASKQoOcm9vbU1lbWJlckRhdGEYDSABKAsyDy5Sb29tTWVtYmVyRGF0YUgAQgYKBHR5cGUiXgoPUGxheWVyVHVyblN0YXJ0EgwKBHR5cGUYASABKAkSIwoEZGF0YRgCIAEoCzIVLlBsYXllclR1cm5TdGFydC5EYXRhGhgKBERhdGESEAoIcGxheWVySWQYASABKAkijQEKElN1Z29yb2t1TW92ZVVwZGF0ZRIMCgR0eXBlGAEgASgJEiYKBGRhdGEYAiABKAsyGC5TdWdvcm9rdU1vdmVVcGRhdGUuRGF0YRpBCgREYXRhEhAKCHBsYXllcklkGAEgASgJEhIKCnN0ZXBzTW92ZWQYAiABKAUSEwoLbmV3UG9zaXRpb24YAyABKAUifwoVUGxheWVyTW92ZW1lbnREaXNwbGF5EgwKBHR5cGUYASABKAkSKQoEZGF0YRgCIAEoCzIbLlBsYXllck1vdmVtZW50RGlzcGxheS5EYXRhGi0KBERhdGESEAoIcGxheWVySWQYASABKAkSEwoLbmV3UG9zaXRpb24YAiABKAUiiQEKCVF1aXpTdGFydBIMCgR0eXBlGAEgASgJEh0KBGRhdGEYAiABKAsyDy5RdWl6U3RhcnQuRGF0YRpPCgREYXRhEhAKCHBsYXllcklkGAEgASgJEhQKDHF1aXpRdWVzdGlvbhgCIAEoCRIPCgdvcHRpb25zGAMgAygJEg4KBmFuc3dlchgEIAEoCSKSAQoKUXVpelJlc3VsdBIMCgR0eXBlGAEgASgJEh4KBGRhdGEYAiABKAsyEC5RdWl6UmVzdWx0LkRhdGEaVgoERGF0YRIQCghQbGF5ZXJJZBgBIAEoCRIYChBvdG9zaGlkYW1hQW1vdW50GAIgASgFEg8KB21lc3NhZ2UYAyABKAkSEQoJaXNDb3JyZWN0GAQgASgIIokBCg9PdG9zaGlkYW1hRXZlbnQSDAoEdHlwZRgBIAEoCRIjCgRkYXRhGAIgASgLMhUuT3Rvc2hpZGFtYUV2ZW50LkRhdGEaQwoERGF0YRIQCghwbGF5ZXJJZBgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEhgKEG90b3NoaWRhbWFBbW91bnQYAyABKAUi8QEKCUdhbWVTdGFydBIMCgR0eXBlGAEgASgJEh0KBGRhdGEYAiABKAsyDy5HYW1lU3RhcnQuRGF0YRq2AQoERGF0YRIRCglwbGF5ZXJJZHMYASADKAkSIAoDbWFwGAIgASgLMhMuR2FtZVN0YXJ0LkRhdGEuTWFwGnkKA01hcBIvCgdzcXVhcmVzGAEgAygOMh4uR2FtZVN0YXJ0LkRhdGEuTWFwLnNxdWFyZVR5cGUiQQoKc3F1YXJlVHlwZRIKCgZOT1JNQUwQABIICgRRVUlaEAESDgoKT1RPU0hJREFNQRACEg0KCUZVUklEQVNISRADIqgBCgdHYW1lRW5kEgwKBHR5cGUYASABKAkSGwoEZGF0YRgCIAEoCzINLkdhbWVFbmQuRGF0YRpyCgREYXRhEjUKDHBsYXllclNjb3JlcxgBIAMoCzIfLkdhbWVFbmQuRGF0YS5QbGF5ZXJTY29yZXNFbnRyeRozChFQbGF5ZXJTY29yZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAU6AjgBIqYBCg1SYW5raW5nVXBkYXRlEgwKBHR5cGUYASABKAkSIQoEZGF0YRgCIAEoCzITLlJhbmtpbmdVcGRhdGUuRGF0YRpkCgREYXRhEi0KCHJhbmtpbmdzGAEgAygLMhsuUmFua2luZ1VwZGF0ZS5EYXRhLlJhbmtpbmcaLQoHUmFua2luZxIQCghwbGF5ZXJJZBgBIAEoCRIQCghwb3NpdGlvbhgCIAEoBSKEAQoQUm9vbUpvaW5SZXNwb25zZRIMCgR0eXBlGAEgASgJEiQKBGRhdGEYAiABKAsyFi5Sb29tSm9pblJlc3BvbnNlLkRhdGEaPAoERGF0YRIQCghwbGF5ZXJJZBgBIAEoCRIQCghuaWNrbmFtZRgCIAEoCRIQCghyb29tQ29kZRgDIAEoCSI0Cg5Sb29tTWVtYmVyRGF0YRIQCghwbGF5ZXJJZBgBIAEoCRIQCghuaWNrbmFtZRgCIAEoCSLGBwoJUm9vbVN0YXRlEgwKBHR5cGUYASABKAkSHQoEZGF0YRgCIAEoCzIPLlJvb21TdGF0ZS5EYXRhGtkGCgREYXRhEhAKCHJvb21Db2RlGAEgASgJEg8KB3VzZXJJRHMYAiADKAkSMQoJdXNlck9yZGVyGAMgAygLMh4uUm9vbVN0YXRlLkRhdGEuVXNlck9yZGVyRW50cnkSOwoOdXNlck90b3NoaWRhbWEYBCADKAsyIy5Sb29tU3RhdGUuRGF0YS5Vc2VyT3Rvc2hpZGFtYUVudHJ5EjcKDHVzZXJQb3NpdGlvbhgFIAMoCzIhLlJvb21TdGF0ZS5EYXRhLlVzZXJQb3NpdGlvbkVudHJ5EjsKDnVzZXJJc0Fuc3dlcmVkGAYgAygLMiMuUm9vbVN0YXRlLkRhdGEuVXNlcklzQW5zd2VyZWRFbnRyeRJFChN1c2VySXNBbnN3ZXJlZE9yZGVyGAcgAygLMiguUm9vbVN0YXRlLkRhdGEuVXNlcklzQW5zd2VyZWRPcmRlckVudHJ5EjMKCnVzZXJBbnN3ZXIYCCADKAsyHy5Sb29tU3RhdGUuRGF0YS5Vc2VyQW5zd2VyRW50cnkSHAoIcXVpekRhdGEYCSABKAsyCi5RdWl6U3RhcnQSIwoFc3RhdGUYCiABKA4yFC5Sb29tU3RhdGUuUm9vbVN0YXRlEigKC3N1Z29yb2t1TWFwGAsgASgLMhMuR2FtZVN0YXJ0LkRhdGEuTWFwEhsKE0N1cnJlbnRUdXJuUGxheWVySWQYDCABKAkaMAoOVXNlck9yZGVyRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgFOgI4ARo1ChNVc2VyT3Rvc2hpZGFtYUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoBToCOAEaMwoRVXNlclBvc2l0aW9uRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgFOgI4ARo1ChNVc2VySXNBbnN3ZXJlZEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCDoCOAEaOgoYVXNlcklzQW5zd2VyZWRPcmRlckVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoBToCOAEaMQoPVXNlckFuc3dlckVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiMAoJUm9vbVN0YXRlEgsKB1dhaXRpbmcQABIKCgZHYW1pbmcQARIKCgZSZXN1bHQQAmIGcHJvdG8z",
 	);
 
 /**
@@ -92,6 +92,27 @@ export type ServerMessage = Message<"ServerMessage"> & {
 				 */
 				value: RoomJoinResponse;
 				case: "roomJoinResponse";
+		  }
+		| {
+				/**
+				 * @generated from field: string ReturnPlayerId = 11;
+				 */
+				value: string;
+				case: "ReturnPlayerId";
+		  }
+		| {
+				/**
+				 * @generated from field: RoomState roomState = 12;
+				 */
+				value: RoomState;
+				case: "roomState";
+		  }
+		| {
+				/**
+				 * @generated from field: RoomMemberData roomMemberData = 13;
+				 */
+				value: RoomMemberData;
+				case: "roomMemberData";
 		  }
 		| { case: undefined; value?: undefined };
 };
@@ -650,3 +671,145 @@ export type RoomJoinResponse_Data = Message<"RoomJoinResponse.Data"> & {
 export const RoomJoinResponse_DataSchema: GenMessage<RoomJoinResponse_Data> =
 	/*@__PURE__*/
 	messageDesc(file_server_message, 10, 0);
+
+/**
+ * @generated from message RoomMemberData
+ */
+export type RoomMemberData = Message<"RoomMemberData"> & {
+	/**
+	 * @generated from field: string playerId = 1;
+	 */
+	playerId: string;
+
+	/**
+	 * @generated from field: string nickname = 2;
+	 */
+	nickname: string;
+};
+
+/**
+ * Describes the message RoomMemberData.
+ * Use `create(RoomMemberDataSchema)` to create a new message.
+ */
+export const RoomMemberDataSchema: GenMessage<RoomMemberData> = /*@__PURE__*/ messageDesc(file_server_message, 11);
+
+/**
+ * @generated from message RoomState
+ */
+export type RoomState = Message<"RoomState"> & {
+	/**
+	 * "ROOM_STATE"
+	 *
+	 * @generated from field: string type = 1;
+	 */
+	type: string;
+
+	/**
+	 * @generated from field: RoomState.Data data = 2;
+	 */
+	data?: RoomState_Data;
+};
+
+/**
+ * Describes the message RoomState.
+ * Use `create(RoomStateSchema)` to create a new message.
+ */
+export const RoomStateSchema: GenMessage<RoomState> = /*@__PURE__*/ messageDesc(file_server_message, 12);
+
+/**
+ * @generated from message RoomState.Data
+ */
+export type RoomState_Data = Message<"RoomState.Data"> & {
+	/**
+	 * @generated from field: string roomCode = 1;
+	 */
+	roomCode: string;
+
+	/**
+	 * @generated from field: repeated string userIDs = 2;
+	 */
+	userIDs: string[];
+
+	/**
+	 * @generated from field: map<string, int32> userOrder = 3;
+	 */
+	userOrder: { [key: string]: number };
+
+	/**
+	 * @generated from field: map<string, int32> userOtoshidama = 4;
+	 */
+	userOtoshidama: { [key: string]: number };
+
+	/**
+	 * @generated from field: map<string, int32> userPosition = 5;
+	 */
+	userPosition: { [key: string]: number };
+
+	/**
+	 * @generated from field: map<string, bool> userIsAnswered = 6;
+	 */
+	userIsAnswered: { [key: string]: boolean };
+
+	/**
+	 * @generated from field: map<string, int32> userIsAnsweredOrder = 7;
+	 */
+	userIsAnsweredOrder: { [key: string]: number };
+
+	/**
+	 * @generated from field: map<string, string> userAnswer = 8;
+	 */
+	userAnswer: { [key: string]: string };
+
+	/**
+	 * @generated from field: QuizStart quizData = 9;
+	 */
+	quizData?: QuizStart;
+
+	/**
+	 * @generated from field: RoomState.RoomState state = 10;
+	 */
+	state: RoomState_RoomState;
+
+	/**
+	 * @generated from field: GameStart.Data.Map sugorokuMap = 11;
+	 */
+	sugorokuMap?: GameStart_Data_Map;
+
+	/**
+	 * @generated from field: string CurrentTurnPlayerId = 12;
+	 */
+	CurrentTurnPlayerId: string;
+};
+
+/**
+ * Describes the message RoomState.Data.
+ * Use `create(RoomState_DataSchema)` to create a new message.
+ */
+export const RoomState_DataSchema: GenMessage<RoomState_Data> = /*@__PURE__*/ messageDesc(file_server_message, 12, 0);
+
+/**
+ * @generated from enum RoomState.RoomState
+ */
+export enum RoomState_RoomState {
+	/**
+	 * @generated from enum value: Waiting = 0;
+	 */
+	Waiting = 0,
+
+	/**
+	 * @generated from enum value: Gaming = 1;
+	 */
+	Gaming = 1,
+
+	/**
+	 * @generated from enum value: Result = 2;
+	 */
+	Result = 2,
+}
+
+/**
+ * Describes the enum RoomState.RoomState.
+ */
+export const RoomState_RoomStateSchema: GenEnum<RoomState_RoomState> =
+	/*@__PURE__*/
+	enumDesc(file_server_message, 12, 0);

@@ -15,6 +15,7 @@ export interface WebSocketProviderProps {
 
 export const WebSocketProvider = ({ roomCode, children, nickname }: WebSocketProviderProps) => {
 	const baseWsUrl = import.meta.env.VITE_WS_URL;
+
 	const ws = useRef<WebSocket | null>(null);
 
 	const handleMessage = useServerMessageHandler();
